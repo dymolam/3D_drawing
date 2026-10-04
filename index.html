@@ -110,9 +110,10 @@ details.adv-panel[open]>summary{margin-bottom:10px;color:#1e3a8a}
 .tool-pane{min-width:0;overflow:auto;padding:8px 2px 2px}
 .tool-pane h2{font-size:.84rem;margin:2px 0 6px;padding-top:0;border-top:0}
 #bottom-tools{flex:0 0 auto;margin:0 8px 8px;padding:8px 10px 10px;background:#fff;border:1px solid var(--border);border-radius:10px}
-#bottom-tools .tool-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
-#bottom-tools .tool-tab{width:100%}
-#bottom-tool-content{max-height:none;min-height:0;flex:1;overflow:auto}
+#bottom-tools{height:270px;min-height:110px;display:flex;flex-direction:column}
+#bottom-tool-content{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:start;gap:8px;min-height:0;flex:1;overflow:hidden}
+#bottom-tool-content .tool-pane{display:block!important;min-height:0;max-height:100%;overflow:auto;padding:5px;border:1px solid #e2e8f0;border-radius:8px;background:#fff}
+#bottom-tool-content .tool-pane[hidden]{display:block!important}
 #right-tool-content{min-height:0;flex:1;overflow:auto}
 .help{display:none!important}
 .main{column-gap:0}
@@ -136,16 +137,16 @@ details.adv-panel[open]>summary{margin-bottom:10px;color:#1e3a8a}
 #bottom-tools.collapsed{height:42px!important;min-height:42px!important;overflow:hidden;padding:5px 8px}
 #bottom-tools.collapsed #bottom-tool-content{display:none}
 .bottom-tool-head{height:30px;margin-bottom:5px}
-.bottom-tool-head .tool-tabs{flex:1}
-#bottom-tools .bottom-tool-head .tool-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.bottom-tool-head>strong{flex:1;color:#334155;font-size:.86rem}
+.bottom-tool-head .tool-tabs{display:none}
 #bottom-tools.collapsed .bottom-tool-head{margin:0;height:30px}
-@media(max-width:950px){.resize-splitter,#bottom-splitter{display:none!important}.main{column-gap:7px!important}}
+@media(max-width:950px){.resize-splitter,#bottom-splitter{display:none!important}.main{column-gap:7px!important}#bottom-tool-content{grid-template-columns:repeat(3,minmax(210px,1fr));overflow:auto}#bottom-tool-content .tool-pane{max-height:none;overflow:visible}#bottom-tools{height:310px;overflow:hidden}}
 @media(max-width:1120px){.main{grid-template-columns:minmax(320px,35vw) minmax(320px,1fr) minmax(220px,23vw);gap:6px;padding:6px}.preset-cards{gap:4px}.preset-card{padding:5px 6px}.preset-card .pc-title{font-size:.72rem}.preset-card .pc-sub{font-size:.56rem}}
 @media(max-width:950px){
   header{padding:7px 10px}.header-line{align-items:flex-start;flex-wrap:wrap;gap:3px 10px;white-space:normal;overflow:visible}header h1{font-size:1rem}.sub{flex:1 1 100%;font-size:.65rem;white-space:normal;overflow:visible;text-overflow:clip}
   .main{flex:0 0 auto;grid-template-columns:1fr;grid-template-rows:minmax(220px,34vh) minmax(340px,54vh) auto;gap:7px;padding:7px}
   .sidebar{max-height:38vh}.tool-drawer{max-height:24vh}.viewport-wrap{min-height:340px}
-  #bottom-tools{margin:0 7px 7px}#bottom-tools .tool-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}#bottom-tool-content{max-height:38vh}
+  #bottom-tools{margin:0 7px 7px}
 }
 
 /* advanced: upload / text desc (kept, not primary) */
@@ -224,7 +225,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
           <button type="button" class="preset-card" data-preset="sqPyramid" id="btn-sq-pyr"><span class="pc-title">正方角錐</span><span class="pc-sub">V–ABCD</span></button>
           <button type="button" class="preset-card" data-preset="rectPyramid3perp" id="btn-rect-pyr"><span class="pc-title">長方角錐</span><span class="pc-sub">三垂線 O／M</span></button>
           <button type="button" class="preset-card" data-preset="eqTriPyramid" id="btn-eq-pyr"><span class="pc-title">正四面體</span><span class="pc-sub">V–ABC，六棱相等</span></button>
-          <button type="button" class="preset-card" data-preset="pyramid5b" id="btn-pyr"><span class="pc-title">角錐 V–AMNC</span><span class="pc-sub">底面虛線 AC</span></button>
         </div>
       </div>
       <div class="preset-group">
@@ -236,7 +236,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
         </div>
       </div>
       <div class="preset-group">
-        <div class="preset-group-label">§10.2 應用</div>
+        <div class="preset-group-label">應用</div>
         <div class="preset-cards">
           <button type="button" class="preset-card" data-preset="towerHoriz" id="btn-tower"><span class="pc-title">鉛垂塔</span><span class="pc-sub">CD＋水平三角 ABC</span></button>
           <button type="button" class="preset-card" data-preset="slopePlane" id="btn-slope"><span class="pc-title">斜面／山坡</span><span class="pc-sub">水平投影示意</span></button>
@@ -260,7 +260,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       </div>
     </div>
 
-    <h2>② 立體三角學 — 畫三角形</h2>
+    <h2>② 畫輔助三角形</h2>
     <div id="mode-banner" class="mode-banner">提示：按「開始選三點」後，在 3D 畫面點選三個頂點。</div>
     <div class="tri-pick">
       <span>已選：</span>
@@ -292,7 +292,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     </div>
     <div id="proj-list" class="tri-list"></div>
 
-    <h2>④ 在棱上加點／切面</h2>
+    <h2>④ 於邊上加點</h2>
     <p class="note">在棱上加任意點會自動命名 P／P1…；按「加中點」才加入並命名 M／M1…。選 ≥4 點可定義切面；切去時所選點圍成的立體會被切去。</p>
     <label for="edge-select">現有棱</label>
     <select id="edge-select" class="face-select"><option value="">— 揀一條棱，或用下方選兩點 —</option></select>
@@ -305,7 +305,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     <div id="mid-banner" class="mode-banner">可下拉揀棱並調 t，或按「選兩點」在 3D 畫面選棱兩端。</div>
     <div class="btn-row">
       <button type="button" id="btn-pick-mid" class="secondary">開始選兩點</button>
-      <button type="button" id="btn-add-edge-pt" class="ok" disabled>在棱上加點</button>
+      <button type="button" id="btn-add-edge-pt" class="ok" disabled>④ 於邊上加點</button>
       <button type="button" id="btn-add-mid" class="secondary" disabled>加中點 (t=0.5)</button>
       <button type="button" id="btn-mid-cancel" class="ghost">取消</button>
     </div>
@@ -325,7 +325,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     <div id="cut-banner" class="mode-banner">按「選 ≥4 點做切面」後揀至少 4 個點（可繼續加至 12）。</div>
     <div id="cut-list" class="tri-list"></div>
 
-    <h2>④b 摺紙</h2>
+    <h2>摺紙問題</h2>
     <p class="note">先喺樣板「摺紙」揀平面圖形。平面底可加 <strong>1–2 條摺痕</strong>（揀邊界／現有頂點兩端）；非固定側繞摺痕旋轉，角度 0–180°。底區自動固定。</p>
     <label for="fold-crease">摺痕（預設／已加）</label>
     <select id="fold-crease" class="face-select"><option value="">— 載入摺紙後顯示 —</option></select>
@@ -350,7 +350,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     </div>
     <div id="fold-banner" class="mode-banner">請先喺樣板目錄揀摺紙平面圖形。</div>
 
-    <h2>⑤ 標示夾角</h2>
+    <h2>6 標示夾角</h2>
     <p class="ang-note">唔使計度數——只需喺 3D 上<strong>視覺標示</strong>：圓弧、直角方塊、色楔、∠ABC 標籤。加入後一定畫喺模型上（唔依賴結果面板）。</p>
     <p class="note">面與面（二面角）／線與面／三角形頂角。可揀已知面快速標示。</p>
     <label for="ang-face-a">二面角：面 A</label>
@@ -422,7 +422,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
             <button type="button" id="fp-sq-pyr" class="ghost">正方角錐</button>
             <button type="button" id="fp-rect-pyr" class="ghost">長方角錐</button>
             <button type="button" id="fp-eq-pyr" class="ghost">等邊底角錐</button>
-            <button type="button" id="fp-pyr" class="ghost">角錐 V–AMNC</button>
           </div>
           <div class="fp-group-label">四面體</div>
           <div class="btn-row">
@@ -430,7 +429,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
             <button type="button" id="fp-tetra-right" class="ghost">直角頂四面體</button>
             <button type="button" id="fp-tetra-isos" class="ghost">等腰四面體</button>
           </div>
-          <div class="fp-group-label">§10.2 應用</div>
+          <div class="fp-group-label">應用</div>
           <div class="btn-row">
             <button type="button" id="fp-tower" class="ghost">鉛垂塔＋水平三角</button>
             <button type="button" id="fp-slope" class="ghost">斜面／山坡</button>
@@ -489,14 +488,13 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
                   <option value="sqPyramid">正方角錐</option>
                   <option value="rectPyramid3perp">長方角錐（三垂線）</option>
                   <option value="eqTriPyramid">正四面體</option>
-                  <option value="pyramid5b">角錐 V–AMNC</option>
                 </optgroup>
                 <optgroup label="四面體">
                   <option value="tetraABCD">四面體（邊不相等）D–ABC</option>
                   <option value="tetraRightApex">直角頂四面體 OABC</option>
                   <option value="tetraIsos">等腰四面體（垂足 P）</option>
                 </optgroup>
-                <optgroup label="§10.2 應用">
+                <optgroup label="應用">
                   <option value="towerHoriz">鉛垂塔＋水平三角</option>
                   <option value="slopePlane">斜面／山坡＋水平投影</option>
                 </optgroup>
@@ -580,19 +578,14 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
   <aside class="tool-drawer" id="tool-drawer" aria-label="切面及摺紙工具">
     <div class="drawer-title"><span>右側工具</span><button type="button" class="pane-toggle" id="right-panel-toggle" aria-label="收合右側面板" title="收合右側面板">▶</button></div>
     <div class="tool-tabs" role="tablist" aria-label="右側工具選擇">
-      <button type="button" class="tool-tab" data-right-tool="cut" aria-expanded="false">切面／切去</button>
-      <button type="button" class="tool-tab" data-right-tool="fold" aria-expanded="false">④b 摺紙</button>
+      <button type="button" class="tool-tab" data-right-tool="cut" aria-expanded="false">切去立體</button>
+      <button type="button" class="tool-tab" data-right-tool="fold" aria-expanded="false">摺紙問題</button>
     </div>
     <div id="right-tool-content"></div>
   </aside>
 </div>
 <section id="bottom-tools" aria-label="立體三角學工具">
-  <div class="bottom-tool-head"><div class="tool-tabs" role="tablist" aria-label="下方工具選擇">
-    <button type="button" class="tool-tab" data-bottom-tool="triangle" aria-expanded="false">② 三角形</button>
-    <button type="button" class="tool-tab" data-bottom-tool="projection" aria-expanded="false">③ 投影</button>
-    <button type="button" class="tool-tab" data-bottom-tool="edge" aria-expanded="false">在棱上加點</button>
-    <button type="button" class="tool-tab" data-bottom-tool="angle" aria-expanded="false">⑤ 標示夾角</button>
-  </div><button type="button" class="pane-toggle" id="bottom-panel-toggle" aria-label="收合下方面板" title="收合下方面板">▼</button></div>
+  <div class="bottom-tool-head"><strong>幾何工具</strong><button type="button" class="pane-toggle" id="bottom-panel-toggle" aria-label="收合下方面板" title="收合下方面板">▼</button></div>
   <div id="bottom-tool-content"></div>
 </section>
 
@@ -990,18 +983,17 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     var triPane=pane(bottom,'bottom-pane-triangle');
     var projPane=pane(bottom,'bottom-pane-projection');
     var edgePane=pane(bottom,'bottom-pane-edge');
-    var anglePane=pane(bottom,'bottom-pane-angle');
     var cutPane=pane(right,'right-pane-cut');
     var foldPane=pane(right,'right-pane-fold');
-    var hTri=heading('② 立體三角學'), hProj=heading('③ 投影'), hEdge=heading('④ 在棱上'),
-        hFold=heading('④b 摺紙'), hAngle=heading('⑤ 標示夾角'), details=$('adv-panel'), cutIntro=directNote('切去／切面：');
+    var hTri=heading('② 畫輔助三角形'), hProj=heading('③ 投影'), hEdge=heading('④ 於邊上加點'),
+        hFold=heading('摺紙問題'), hAngle=heading('6 標示夾角'), details=$('adv-panel'), cutIntro=directNote('切去／切面：');
     if(hTri&&hProj) moveRange(hTri,hProj,triPane);
     if(hProj&&hEdge) moveRange(hProj,hEdge,projPane);
     // Separate the edge-point controls from the cut-away controls in section ④.
-    if(hEdge){ hEdge.textContent='在棱上加點'; moveRange(hEdge,cutIntro||hFold,edgePane); }
+    if(hEdge){ moveRange(hEdge,cutIntro||hFold,edgePane); }
     if(cutIntro&&hFold) moveRange(cutIntro,hFold,cutPane);
     if(hFold&&hAngle) moveRange(hFold,hAngle,foldPane);
-    if(hAngle&&details) moveRange(hAngle,details,anglePane);
+    if(hAngle&&details) moveRange(hAngle,details,edgePane);
     function bindTabGroup(selector, attr, map){
       var buttons=Array.prototype.slice.call(document.querySelectorAll(selector));
       buttons.forEach(function(btn){
@@ -1015,7 +1007,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
         });
       });
     }
-    bindTabGroup('[data-bottom-tool]','data-bottom-tool',{triangle:triPane,projection:projPane,edge:edgePane,angle:anglePane});
     bindTabGroup('[data-right-tool]','data-right-tool',{cut:cutPane,fold:foldPane});
     setupResizablePanels(sidebar);
   }
@@ -1690,6 +1681,18 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     spr.userData.vertexName=text;
     return spr;
   }
+  function vertexLabelPosition(name, point){
+    var center=new THREE.Vector3(), box=new THREE.Box3();
+    Object.keys(state.pts).forEach(function(key){ if(state.pts[key]) box.expandByPoint(state.pts[key]); });
+    if(!box.isEmpty()) box.getCenter(center);
+    var outward=point.clone().sub(center);
+    if(outward.lengthSq()<1e-10) outward.set(0.65,0.4,0.8);
+    outward.normalize();
+    var size=new THREE.Vector3();
+    if(!box.isEmpty()) box.getSize(size);
+    var gap=Math.max(0.14,size.length()*0.045);
+    return point.clone().addScaledVector(outward,gap);
+  }
 
   function disposeObject3D(ch){
     if(!ch) return;
@@ -1917,7 +1920,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       contentRoot.add(mesh); state.meshes[name]=mesh;
       var lab=makeLabel(name);
       lab.name='label:'+name;
-      lab.position.copy(state.pts[name]).add(new THREE.Vector3(0.04,0.04,0.065));
+      lab.position.copy(vertexLabelPosition(name,state.pts[name]));
       contentRoot.add(lab); state.labels[name]=lab;
     });
     state.solidKeys.forEach(function(pair,i){
@@ -1979,7 +1982,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     }
     Object.keys(state.meshes).forEach(function(name){
       state.meshes[name].position.copy(state.pts[name]);
-      if(state.labels[name]) state.labels[name].position.copy(state.pts[name]).add(new THREE.Vector3(0.04,0.04,0.065));
+      if(state.labels[name]) state.labels[name].position.copy(vertexLabelPosition(name,state.pts[name]));
     });
     state.solidKeys.forEach(function(pair,i){ updateLine(state.solidLines[i], state.pts[pair[0]], state.pts[pair[1]]); });
     state.dashKeys.forEach(function(pair,i){ updateLine(state.dashLines[i], state.pts[pair[0]], state.pts[pair[1]]); });
@@ -2013,7 +2016,16 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       ox=0.45; oy=-2.7; oz=1.05; fov=40;
     }
     camera.fov=fov;
-    camera.position.set(c.x+r*ox, c.y+r*oy, c.z+r*oz);
+    var direction=new THREE.Vector3(ox,oy,oz).normalize();
+    var boundsRadius=Math.max(size.length()*0.5,0.5);
+    var rect=renderer&&renderer.domElement?renderer.domElement.getBoundingClientRect():null;
+    var aspect=rect&&rect.height>0?rect.width/rect.height:(camera.aspect||1);
+    var verticalFov=fov*Math.PI/180;
+    var horizontalFov=2*Math.atan(Math.tan(verticalFov/2)*Math.max(aspect,0.1));
+    var limitingHalfFov=Math.max(0.05,Math.min(verticalFov,horizontalFov)/2);
+    var fitDistance=boundsRadius/Math.sin(limitingHalfFov)*1.12;
+    var preferredDistance=r*Math.sqrt(ox*ox+oy*oy+oz*oz);
+    camera.position.copy(c).addScaledVector(direction,Math.max(fitDistance,preferredDistance));
     camera.near=Math.max(0.05, r/100);
     camera.far=Math.max(200, r*50);
     camera.updateProjectionMatrix();
@@ -2132,7 +2144,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     if(!ray.ray.intersectPlane(dragPlane,point)) return;
     state.pts[draggedPoint].copy(point);
     if(state.meshes[draggedPoint]) state.meshes[draggedPoint].position.copy(point);
-    if(state.labels[draggedPoint]) state.labels[draggedPoint].position.copy(point).add(new THREE.Vector3(0.04,0.04,0.065));
+    if(state.labels[draggedPoint]) state.labels[draggedPoint].position.copy(vertexLabelPosition(draggedPoint,point));
     midpoints.forEach(function(mp){if(mp.name===draggedPoint)mp.manual=true;});
     projections.forEach(function(pr){if(pr.name===draggedPoint)pr.manual=true;});
     var row=$('vert-body').querySelector('tr[data-name="'+draggedPoint+'"]');
@@ -2363,11 +2375,11 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       contentRoot.add(mesh); state.meshes[name]=mesh;
       var lab=makeLabel(name);
       lab.name='label:'+name;
-      lab.position.copy(vec).add(new THREE.Vector3(0.04,0.04,0.065));
+      lab.position.copy(vertexLabelPosition(name,vec));
       contentRoot.add(lab); state.labels[name]=lab;
     } else {
       state.meshes[name].position.copy(vec);
-      if(state.labels[name]) state.labels[name].position.copy(vec).add(new THREE.Vector3(0.04,0.04,0.065));
+      if(state.labels[name]) state.labels[name].position.copy(vertexLabelPosition(name,vec));
       if(isProj || isMid || isEdge) state.meshes[name].material.color.setHex(col);
     }
     // table row
@@ -2413,7 +2425,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     state.meshes[name].name='vert:'+name; state.meshes[name].userData.vertexName=name;
     contentRoot.remove(state.labels[name]); disposeObject3D(state.labels[name]);
     state.labels[name]=makeLabel(name); state.labels[name].name='label:'+name;
-    state.labels[name].position.copy(state.pts[name]).add(new THREE.Vector3(0.04,0.04,0.065));
+    state.labels[name].position.copy(vertexLabelPosition(name,state.pts[name]));
     contentRoot.add(state.labels[name]);
     function replaceInPairs(list){ (list||[]).forEach(function(pair){ for(var i=0;i<pair.length;i++) if(pair[i]===oldName) pair[i]=name; }); }
     replaceInPairs(state.solidKeys); replaceInPairs(state.dashKeys); replaceInPairs(state.faceDefs);
@@ -2448,7 +2460,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       if(!foot) return;
       state.pts[pr.name]=foot;
       if(state.meshes[pr.name]) state.meshes[pr.name].position.copy(foot);
-      if(state.labels[pr.name]) state.labels[pr.name].position.copy(foot).add(new THREE.Vector3(0.04,0.04,0.065));
+      if(state.labels[pr.name]) state.labels[pr.name].position.copy(vertexLabelPosition(pr.name,foot));
       if(updateTable!==false){
         var tr=$('vert-body').querySelector('tr[data-name="'+pr.name+'"]');
         if(tr){
@@ -2542,7 +2554,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       if(!mid) return;
       state.pts[mp.name]=mid;
       if(state.meshes[mp.name]) state.meshes[mp.name].position.copy(mid);
-      if(state.labels[mp.name]) state.labels[mp.name].position.copy(mid).add(new THREE.Vector3(0.04,0.04,0.065));
+      if(state.labels[mp.name]) state.labels[mp.name].position.copy(vertexLabelPosition(mp.name,mid));
       if(updateTable!==false){
         var tr=$('vert-body').querySelector('tr[data-name="'+mp.name+'"]');
         if(tr){
@@ -2916,7 +2928,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     var arcR=0.50;
     var info=makeArcBetweenDirs(origin, d1, d2, arcR, 0xa855f7, 32);
     var lab = formatDihedralLabel(aRefs, bRefs);
-    var labelOff = arcR * 1.22;
+    var labelOff = arcR * 0.48;
     if(info){
       makeAngleSprite(lab, origin.clone().addScaledVector(info.midDir, labelOff), 0x7c3aed, 0.72);
     } else {
@@ -3959,7 +3971,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       v.sub(H0).applyQuaternion(q).add(H0);
       state.pts[n].copy(v);
       if(state.meshes[n]) state.meshes[n].position.copy(v);
-      if(state.labels[n]) state.labels[n].position.copy(v).add(new THREE.Vector3(0.04,0.04,0.065));
+      if(state.labels[n]) state.labels[n].position.copy(vertexLabelPosition(n,v));
       var tr=$('vert-body')&&$('vert-body').querySelector('tr[data-name="'+n+'"]');
       if(tr){
         var xs=tr.querySelectorAll('input[type="number"]');
@@ -3990,7 +4002,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     // Vertex spheres / labels
     Object.keys(state.pts).forEach(function(name){
       if(state.meshes[name]) state.meshes[name].position.copy(state.pts[name]);
-      if(state.labels[name]) state.labels[name].position.copy(state.pts[name]).add(new THREE.Vector3(0.04,0.04,0.065));
+      if(state.labels[name]) state.labels[name].position.copy(vertexLabelPosition(name,state.pts[name]));
     });
   }
   function applyAllFolds(){
@@ -5212,7 +5224,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
   if($('fp-cube')) $('fp-cube').addEventListener('click', function(){ pickPresetFromFail('cube'); });
   if($('fp-box')) $('fp-box').addEventListener('click', function(){ pickPresetFromFail('box'); });
   if($('fp-tri')) $('fp-tri').addEventListener('click', function(){ pickPresetFromFail('triPrism'); });
-  if($('fp-pyr')) $('fp-pyr').addEventListener('click', function(){ pickPresetFromFail('pyramid5b'); });
   if($('fp-tri-right')) $('fp-tri-right').addEventListener('click', function(){ pickPresetFromFail('triRightPrism'); });
   if($('fp-sq-pyr')) $('fp-sq-pyr').addEventListener('click', function(){ pickPresetFromFail('sqPyramid'); });
   if($('fp-rect-pyr')) $('fp-rect-pyr').addEventListener('click', function(){ pickPresetFromFail('rectPyramid3perp'); });
