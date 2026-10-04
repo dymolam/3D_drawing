@@ -100,6 +100,7 @@ details.adv-panel[open]>summary{margin-bottom:10px;color:#1e3a8a}
 .preset-group-label{white-space:normal;line-height:1.3;overflow-wrap:anywhere}
 .preset-card .pc-sub{flex:0 1 auto;max-width:46%;font-size:.61rem;color:#64748b;line-height:1.2;font-weight:500;text-align:right}
 .preset-card .pc-sub{display:none!important}
+#preset-catalog,#preset-catalog *{line-height:1!important}
 
 .tool-drawer{display:flex;flex-direction:column;min-width:0;min-height:0;overflow:auto;padding:9px;background:#fff;border:1px solid var(--border);border-radius:10px}
 .drawer-title{font-size:.85rem;font-weight:700;color:#334155;margin:0 0 7px}
@@ -119,6 +120,7 @@ details.adv-panel[open]>summary{margin-bottom:10px;color:#1e3a8a}
 #bottom-tool-content .tool-pane>.btn-row{grid-column:1/-1;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));align-items:center;gap:5px}
 #bottom-tool-content .tool-pane>.btn-row>*{min-width:0;max-width:100%}
 #bottom-tool-content .tool-pane>select,#bottom-tool-content .tool-pane>input{min-width:0;max-width:100%}
+#bottom-tool-content,#bottom-tool-content *{line-height:1!important}
 #right-tool-content{min-height:0;flex:1;overflow:auto}
 .help{display:none!important}
 .main{column-gap:0}
@@ -229,12 +231,12 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
         <div class="preset-cards">
           <button type="button" class="preset-card" data-preset="sqPyramid" id="btn-sq-pyr"><span class="pc-title">正方角錐</span><span class="pc-sub">V–ABCD</span></button>
           <button type="button" class="preset-card" data-preset="rectPyramid3perp" id="btn-rect-pyr"><span class="pc-title">長方角錐</span><span class="pc-sub">三垂線 O／M</span></button>
-          <button type="button" class="preset-card" data-preset="eqTriPyramid" id="btn-eq-pyr"><span class="pc-title">正四面體</span><span class="pc-sub">V–ABC，六棱相等</span></button>
         </div>
       </div>
       <div class="preset-group">
         <div class="preset-group-label">四面體</div>
         <div class="preset-cards">
+          <button type="button" class="preset-card" data-preset="eqTriPyramid" id="btn-eq-pyr"><span class="pc-title">正四面體</span><span class="pc-sub">V–ABC，六棱相等</span></button>
           <button type="button" class="preset-card" data-preset="tetraABCD" id="btn-tetra"><span class="pc-title">四面體（邊不相等）</span><span class="pc-sub">D–ABC · AC 虛線 · 淡綠</span></button>
           <button type="button" class="preset-card" data-preset="tetraRightApex" id="btn-tetra-right"><span class="pc-title">直角頂四面體</span><span class="pc-sub">OABC · CM⊥AB</span></button>
         </div>
