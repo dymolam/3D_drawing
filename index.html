@@ -16,10 +16,10 @@
 html,body{margin:0;padding:0;height:100%;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;background:var(--bg);color:var(--text)}
 body{display:flex;flex-direction:column;min-height:100%}
 header{flex:0 0 auto;padding:7px 12px;background:rgba(255,255,255,.96);border-bottom:1px solid var(--border)}
-.header-line{display:flex;align-items:center;gap:12px;min-width:0}
+.header-line{display:flex;align-items:center;gap:12px;min-width:0;white-space:nowrap;overflow:hidden}
 header h1{margin:0;flex:0 0 auto;font-size:1.08rem;white-space:nowrap;cursor:help}
 header h1 span{font-weight:500;font-size:.84rem;color:#64748b}
-.sub{margin:0;min-width:0;color:var(--muted);font-size:.68rem;line-height:1.35}
+.sub{margin:0;min-width:0;color:var(--muted);font-size:.60rem;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .warn{color:var(--warn);font-weight:600}
 .main{flex:1;display:grid;grid-template-columns:minmax(320px,35vw) minmax(350px,1fr) minmax(230px,23vw);gap:8px;min-height:0;padding:8px}
 .sidebar{background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:auto;padding:9px 10px 14px;display:flex;flex-direction:column;gap:7px;min-width:0}
@@ -115,7 +115,7 @@ details.adv-panel[open]>summary{margin-bottom:10px;color:#1e3a8a}
 .help{display:none!important}
 @media(max-width:1120px){.main{grid-template-columns:minmax(320px,35vw) minmax(320px,1fr) minmax(220px,23vw);gap:6px;padding:6px}.preset-cards{gap:4px}.preset-card{padding:5px 6px}.preset-card .pc-title{font-size:.72rem}.preset-card .pc-sub{font-size:.56rem}}
 @media(max-width:950px){
-  header{padding:7px 10px}.header-line{align-items:flex-start;flex-wrap:wrap;gap:3px 10px}header h1{font-size:1rem}.sub{flex:1 1 100%;font-size:.65rem}
+  header{padding:7px 10px}.header-line{align-items:flex-start;flex-wrap:wrap;gap:3px 10px;white-space:normal;overflow:visible}header h1{font-size:1rem}.sub{flex:1 1 100%;font-size:.65rem;white-space:normal;overflow:visible;text-overflow:clip}
   .main{flex:0 0 auto;grid-template-columns:1fr;grid-template-rows:minmax(220px,34vh) minmax(340px,54vh) auto;gap:7px;padding:7px}
   .sidebar{max-height:38vh}.tool-drawer{max-height:24vh}.viewport-wrap{min-height:340px}
   #bottom-tools{margin:0 7px 7px}#bottom-tools .tool-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}#bottom-tool-content{max-height:38vh}
@@ -164,7 +164,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
 <header>
   <div class="header-line">
     <h1 title="用法摘要：揀左邊立體樣板即時載入 3D；拖曳旋轉、滾輪縮放。下方可用三角形、投影、棱上加點及夾角工具；右側可用切面及摺紙工具。中點只顯示自行加入並命名者；等長邊用刻線標示；直角方框畫在角所在平面；各面用不同顏色。座標 Z 向上。">立體樣板 3D <span>＋立體三角學</span></h1>
-    <p class="sub"><span class="warn">對話／聊天室預覽通常無 WebGL，畫面會空白——請用 Chrome／Edge 以 file:// 開啟本檔。</span> <strong>流程：左邊揀立體樣板 → 即時載入 3D → 旋轉／三角形／投影／夾角。只顯示自行加入並命名的中點；刻線標等長；直角方框畫在角的平面上；各面用不同顏色。</strong></p>
+    <p class="sub"><span class="warn">對話／聊天室預覽通常無 WebGL，請用 Chrome／Edge 的 file:// 開啟。</span> <strong>流程：左揀樣板→即時 3D→旋轉／三角形／投影／夾角；新加中點需命名，等長用刻線、直角框在角平面、各面不同色。</strong></p>
   </div>
 </header>
 <div class="main">
