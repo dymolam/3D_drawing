@@ -141,7 +141,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
   <h1>立體樣板 3D <span style="font-weight:500;font-size:.88rem;color:#64748b">＋立體三角學</span></h1>
   <p class="sub">
     <span class="warn">對話／聊天室預覽通常無 WebGL，畫面會空白——請用 Chrome／Edge 以 file:// 開啟本檔。</span>
-    <strong>流程：左邊揀立體樣板 → 即時載入 3D → 旋轉／對齊課本視角／三角形／投影／夾角。</strong>
+    <strong>流程：左邊揀立體樣板 → 即時載入 3D → 旋轉／對齊課本視角／三角形／投影／夾角。青點＝面上線段中點；刻線標等長；方框標直角；各面用不同顏色。</strong>
     唔使上傳圖或打文字描述。
   </p>
 </header>
@@ -518,7 +518,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       <strong>用法摘要</strong><br/>
       1) 左邊<strong>揀立體樣板</strong>→即時載入 3D。<br/>
       2) 滑鼠拖曳旋轉、滾輪縮放；「對齊課本視角」。<br/>
-      3) 三角形／棱上加點／切面（≥4點）／投影／夾角／摺紙平面摺痕。<br/>
+      3) 三角形／棱上加點／切面（≥4點）／投影／夾角／摺紙平面摺痕。青點標各面線段中點；等腰／等邊用刻線標示。<br/>
       4) 「進階」可選：頂點表微調、上傳認圖、文字描述。<br/>
       座標：Z 向上。詳見 使用說明.txt。
     </p>
@@ -564,10 +564,11 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
         E:[-1,-1,2], F:[1,-1,2], G:[1,1,2], H:[-1,1,2]
       },
       solid:[['A','B'],['B','C'],['C','D'],['D','A'],['E','F'],['F','G'],['G','H'],['H','E'],['A','E'],['B','F'],['C','G'],['D','H']],
-      dashed:[['A','C'],['E','G']],
+      dashed:[['A','C'],['E','G'],['A','G']],
       faces:[['A','B','C','D'],['E','F','G','H'],['A','B','F','E'],['B','C','G','F'],['C','D','H','G'],['D','A','E','H']],
       demoTriangle:['A','C','G'],
-      faceOpacity: 0.22
+      faceOpacity: 0.22,
+      rightAngles:[['A','B','D']]
     },
     box: {
       title: '長方體棱柱 ABCD-EFGH',
@@ -576,10 +577,11 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
         E:[-2,-1.2,1.6], F:[2,-1.2,1.6], G:[2,1.2,1.6], H:[-2,1.2,1.6]
       },
       solid:[['A','B'],['B','C'],['C','D'],['D','A'],['E','F'],['F','G'],['G','H'],['H','E'],['A','E'],['B','F'],['C','G'],['D','H']],
-      dashed:[['A','C']],
+      dashed:[['A','C'],['A','G']],
       faces:[['A','B','C','D'],['E','F','G','H'],['A','B','F','E'],['B','C','G','F'],['C','D','H','G'],['D','A','E','H']],
       demoTriangle:['A','F','H'],
-      faceOpacity: 0.22
+      faceOpacity: 0.22,
+      rightAngles:[['A','B','D']]
     },
     triPrism: {
       title: '三角棱柱 ABC-DEF',
@@ -588,7 +590,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
         D:[-1.8,-1.2,2.2], E:[1.8,-1.2,2.2], F:[0,1.5,2.2]
       },
       solid:[['A','B'],['B','C'],['C','A'],['D','E'],['E','F'],['F','D'],['A','D'],['B','E'],['C','F']],
-      dashed:[],
+      dashed:[['A','F'],['A','E']],
       faces:[['A','B','C'],['D','E','F'],['A','B','E','D'],['B','C','F','E'],['C','A','D','F']],
       demoTriangle:['A','B','F']
     },
@@ -600,11 +602,12 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
         E:[-1.6,1.2,1.9], F:[-1.6,-1.2,1.9]
       },
       solid:[['B','C'],['C','D'],['D','E'],['E','F'],['F','B'],['C','E'],['B','E']],
-      dashed:[['A','B'],['A','D'],['A','F']],
+      dashed:[['A','B'],['A','D'],['A','F'],['A','C']],
       faces:[['A','B','C','D'],['A','B','F'],['C','D','E'],['A','D','E','F'],['B','C','E','F']],
       demoTriangle:['B','D','E'],
       faceTint: 0xc7e8d4,
       faceOpacity: 0.34,
+      rightAngles:[['D','C','E'],['A','D','F']],
       camView: { ox: 0.55, oy: -2.85, oz: 1.15, fov: 38 }
     },
     pyramid5b: {
@@ -643,6 +646,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       demoTriangle:['V','M','O'],
       faceTint: 0xd8b4fe,
       faceOpacity: 0.28,
+      rightAngles:[['O','V','A'],['M','A','V']],
       camView: { ox: 0.4, oy: -2.85, oz: 1.25, fov: 38 }
     },
     tetraABCD: {
@@ -659,6 +663,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       faces:[['A','B','C'],['A','B','D'],['B','C','D'],['A','C','D']],
       demoTriangle:['D','B','C'],
       faceTint: 0xb8e0c8,
+      faceColors:[0xb8e0c8,0xfde68a,0x93c5fd,0xf9a8d4],
       faceOpacity: 0.46,
       dashThick: true,
       camView: { ox: -1.05, oy: -2.75, oz: 0.68, fov: 35 }
@@ -680,6 +685,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       demoTriangle:['C','O','M'],
       faceTint: 0xbfdbfe,
       faceOpacity: 0.36,
+      rightAngles:[['O','C','A'],['M','C','A']],
       dashThick: true,
       camView: { ox: -0.85, oy: -2.7, oz: 1.05, fov: 36 }
     },
@@ -696,6 +702,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       demoTriangle:['A','C','D'],
       faceTint: 0xa5c4fc,
       faceOpacity: 0.34,
+      rightAngles:[['C','A','D']],
       camView: { ox: 0.35, oy: -2.9, oz: 1.05, fov: 38 }
     },
     // §10.2：斜面／山坡＋水平投影（簡易可旋轉）
@@ -711,6 +718,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       demoTriangle:['B','C','F'],
       faceTint: 0xfde68a,
       faceOpacity: 0.30,
+      rightAngles:[['A','B','E'],['F','B','C']],
       camView: { ox: 0.55, oy: -2.75, oz: 1.15, fov: 38 }
     },
     // 例4：直立等腰底三角柱 ABCDEF（底 BCF 等腰，高 CD）
@@ -751,11 +759,12 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
         E:[-1,-1.2,2], F:[1,-1.2,2], G:[1.6,1.2,2], H:[-1.6,1.2,2]
       },
       solid:[['A','B'],['B','C'],['C','D'],['D','A'],['E','F'],['F','G'],['G','H'],['H','E'],['A','E'],['B','F'],['C','G'],['D','H']],
-      dashed:[['A','C']],
+      dashed:[['A','C'],['A','G']],
       faces:[['A','B','C','D'],['E','F','G','H'],['A','B','F','E'],['B','C','G','F'],['C','D','H','G'],['D','A','E','H']],
       demoTriangle:['A','B','F'],
       faceTint: 0xbfdbfe,
       faceOpacity: 0.28,
+      rightAngles:[['A','B','E']],
       camView: { ox: 0.5, oy: -2.8, oz: 1.1, fov: 40 }
     },
     // 10A.20：等腰四面體 ABCD＋AD 上垂足 P（簡化）
@@ -920,6 +929,11 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     }
   };
 
+  var FACE_COLORS = [0xfde68a,0xa5b4fc,0x93c5fd,0x86efac,0xf9a8d4,0xfcd34d,0x67e8f9,0xd8b4fe];
+  Object.keys(PRESETS).forEach(function(key){
+    if((PRESETS[key].faces||[]).length>1) PRESETS[key].distinctFaceColors=true;
+    if(!PRESETS[key].fold) PRESETS[key].autoMidpoints=true;
+  });
   var TRI_COLORS = [0xdc2626, 0x2563eb, 0x16a34a, 0xd97706, 0x7c3aed, 0xdb2777];
 
   // ---------- helpers ----------
@@ -1461,7 +1475,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
 
   var wrap=$('canvas-wrap');
   var scene, camera, renderer, controls, contentRoot, labelRoot, triRoot, auxRoot;
-  var state={ pts:{}, meshes:{}, labels:{}, solidLines:[], dashLines:[], faceMeshes:[], solidKeys:[], dashKeys:[], faceDefs:[] };
+  var state={ pts:{}, meshes:{}, labels:{}, solidLines:[], dashLines:[], faceMeshes:[], solidKeys:[], dashKeys:[], faceDefs:[], rightAngles:[], faceColors:null, distinctFaceColors:false, autoMidpoints:false };
 
   function initThree(){
     if(typeof THREE==='undefined'){
@@ -1705,6 +1719,12 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     currentTitle = model.title || currentTitle || '立體';
     currentFaces = model.faces || [];
     currentDemo = model.demoTriangle || null;
+    state.rightAngles = model.rightAngles || [];
+    state.faceColors = model.faceColors || null;
+    state.distinctFaceColors = !!model.distinctFaceColors;
+    state.autoMidpoints = !!model.autoMidpoints;
+    state.faceTint = (model.faceTint!=null) ? model.faceTint : null;
+    state.faceOpacity = (model.faceOpacity!=null) ? model.faceOpacity : 0.28;
 
     var nVerts=Object.keys(state.pts).length;
     // provisional overlay (edge counts filled after keys assigned)
@@ -1755,8 +1775,8 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       var line=makeLine(true, 'edge:dash:'+pair[0]+'-'+pair[1], !!model.dashThick);
       state.dashLines.push(line);
     });
-    var faceColors=[0xfde68a,0xa5b4fc,0x93c5fd,0x86efac,0xf9a8d4,0xfcd34d];
-    var tint = model.faceTint || null;
+    var faceColors=model.faceColors || FACE_COLORS;
+    var tint = model.distinctFaceColors ? null : (model.faceTint!=null ? model.faceTint : null);
     var fop = (model.faceOpacity!=null) ? model.faceOpacity : 0.28;
     state.faceDefs.forEach(function(names,i){
       var col = tint != null ? tint : faceColors[i%faceColors.length];
@@ -3500,8 +3520,8 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       state.dashLines.push(line);
       if(state.pts[pair[0]]&&state.pts[pair[1]]) updateLine(line, state.pts[pair[0]], state.pts[pair[1]]);
     });
-    var faceColors=[0x93c5fd,0xf9a8d4,0x86efac,0xfcd34d,0xc4b5fd,0xfda4af,0x67e8f9,0xd8b4fe];
-    var tint = (state.faceTint!=null) ? state.faceTint : null;
+    var faceColors=state.faceColors || FACE_COLORS;
+    var tint = state.distinctFaceColors ? null : ((state.faceTint!=null) ? state.faceTint : null);
     var fop = (state.faceOpacity!=null) ? state.faceOpacity : 0.28;
     (state.faceDefs||[]).forEach(function(names,i){
       var col = tint != null ? tint : faceColors[i%faceColors.length];
@@ -3743,6 +3763,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
         }
       }
     });
+    drawPresetAnnotations();
     // angle marks — always visual, independent of metrics panel
     angleMeasures.forEach(function(am){
       try{
@@ -3776,6 +3797,84 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
         }
       }
       if(pts.length>=3) makeCutFaceMesh(pts, cf.hideCorner?0xfef3c7:0xfdba74);
+    });
+  }
+  function drawPresetAnnotations(){
+    var seen={}, lines=[];
+    function faceHasEdge(a,b){
+      return (state.faceDefs||[]).some(function(face){ return face && face.indexOf(a)>=0 && face.indexOf(b)>=0; });
+    }
+    if(state.autoMidpoints){
+      (state.solidKeys||[]).concat(state.dashKeys||[]).forEach(function(edge){
+        if(!edge||edge.length<2||!state.pts[edge[0]]||!state.pts[edge[1]]||!faceHasEdge(edge[0],edge[1])) return;
+        var key=edgeKey(edge[0],edge[1]);
+        if(seen[key]) return;
+        seen[key]=1; lines.push(edge);
+      });
+      lines.forEach(function(edge){
+        var p=state.pts[edge[0]].clone().add(state.pts[edge[1]]).multiplyScalar(0.5);
+        var halo=new THREE.Mesh(new THREE.SphereGeometry(0.075,12,8), new THREE.MeshBasicMaterial({color:0xffffff,depthWrite:false}));
+        halo.position.copy(p); halo.renderOrder=12; halo.userData.autoMidpoint=true; auxRoot.add(halo);
+        var dot=new THREE.Mesh(new THREE.SphereGeometry(0.046,12,8), new THREE.MeshBasicMaterial({color:0x0891b2,depthWrite:false}));
+        dot.position.copy(p); dot.renderOrder=13; dot.userData.autoMidpoint=true; dot.userData.edge=edge.slice(); auxRoot.add(dot);
+      });
+    }
+
+    // Mark equal sides of isosceles/equilateral triangular faces with the usual tick notation.
+    var parent={}, edgeRefs={}, edgeNormals={};
+    function root(k){ parent[k]=parent[k]||k; if(parent[k]!==k) parent[k]=root(parent[k]); return parent[k]; }
+    function join(a,b){ var ra=root(a), rb=root(b); if(ra!==rb) parent[rb]=ra; }
+    function recordEdge(a,b,normal){
+      var key=edgeKey(a,b); edgeRefs[key]={a:a,b:b};
+      if(normal&&!edgeNormals[key]) edgeNormals[key]=normal.clone();
+      root(key); return key;
+    }
+    (state.faceDefs||[]).forEach(function(face){
+      if(!face||face.length!==3) return;
+      var names=face, pts=names.map(function(n){return state.pts[n];});
+      if(pts.some(function(p){return !p;})) return;
+      var normal=new THREE.Vector3().crossVectors(pts[1].clone().sub(pts[0]),pts[2].clone().sub(pts[0]));
+      if(normal.lengthSq()<1e-12) return;
+      normal.normalize();
+      var edges=[[0,1],[1,2],[2,0]].map(function(ix){
+        var a=names[ix[0]], b=names[ix[1]];
+        return {key:recordEdge(a,b,normal),a:a,b:b,len:pts[ix[0]].distanceTo(pts[ix[1]])};
+      });
+      var maxLen=Math.max(edges[0].len,edges[1].len,edges[2].len,1e-8), eps=maxLen*1e-3;
+      for(var i=0;i<3;i++) for(var j=i+1;j<3;j++){
+        if(Math.abs(edges[i].len-edges[j].len)<=eps) join(edges[i].key,edges[j].key);
+      }
+    });
+    var groups={};
+    Object.keys(edgeRefs).forEach(function(key){ var r=root(key); (groups[r]||(groups[r]=[])).push(key); });
+    Object.keys(groups).forEach(function(r){
+      var group=groups[r]; if(group.length<2) return;
+      var tickCount=group.length>=3?2:1;
+      group.forEach(function(key){
+        var e=edgeRefs[key], A=state.pts[e.a], B=state.pts[e.b], normal=edgeNormals[key];
+        if(!A||!B||!normal) return;
+        var dir=B.clone().sub(A), len=dir.length(); if(len<1e-8) return; dir.normalize();
+        var across=new THREE.Vector3().crossVectors(normal,dir).normalize();
+        var gap=0.085, half=0.075;
+        for(var ti=0;ti<tickCount;ti++){
+          var offset=(ti-(tickCount-1)/2)*gap;
+          var center=A.clone().lerp(B,0.5+offset/len);
+          makeSolidSeg(center.clone().addScaledVector(across,-half),center.clone().addScaledVector(across,half),0x0f766e);
+        }
+      });
+    });
+
+    // Preset-defined right angles: [vertex, ray endpoint 1, ray endpoint 2].
+    (state.rightAngles||[]).forEach(function(mark){
+      if(!mark||mark.length<3) return;
+      var V=v3(mark[0]), A=v3(mark[1]), B=v3(mark[2]);
+      if(!V||!A||!B) return;
+      var d1=A.clone().sub(V), d2=B.clone().sub(V);
+      if(d1.lengthSq()<1e-12||d2.lengthSq()<1e-12) return;
+      var cosine=Math.abs(d1.normalize().dot(d2.normalize()));
+      if(cosine>0.035) return;
+      var normal=new THREE.Vector3().crossVectors(d1,d2).normalize();
+      makeRightAngleMark(V,A,normal,0.17);
     });
   }
   function renderProjList(){
