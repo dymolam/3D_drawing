@@ -99,6 +99,7 @@ details.adv-panel[open]>summary{margin-bottom:10px;color:#1e3a8a}
 .preset-card .pc-title{flex:1;min-width:0;font-size:.77rem;font-weight:700;color:#1e3a8a;line-height:1.18}
 .preset-group-label{white-space:normal;line-height:1.3;overflow-wrap:anywhere}
 .preset-card .pc-sub{flex:0 1 auto;max-width:46%;font-size:.61rem;color:#64748b;line-height:1.2;font-weight:500;text-align:right}
+.preset-card .pc-sub{display:none!important}
 
 .tool-drawer{display:flex;flex-direction:column;min-width:0;min-height:0;overflow:auto;padding:9px;background:#fff;border:1px solid var(--border);border-radius:10px}
 .drawer-title{font-size:.85rem;font-weight:700;color:#334155;margin:0 0 7px}
@@ -111,8 +112,34 @@ details.adv-panel[open]>summary{margin-bottom:10px;color:#1e3a8a}
 #bottom-tools{flex:0 0 auto;margin:0 8px 8px;padding:8px 10px 10px;background:#fff;border:1px solid var(--border);border-radius:10px}
 #bottom-tools .tool-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
 #bottom-tools .tool-tab{width:100%}
-#bottom-tool-content{max-height:260px;overflow:auto}
+#bottom-tool-content{max-height:none;min-height:0;flex:1;overflow:auto}
+#right-tool-content{min-height:0;flex:1;overflow:auto}
 .help{display:none!important}
+.main{column-gap:0}
+.resize-splitter{position:relative;z-index:8;touch-action:none;background:transparent;cursor:col-resize;min-width:8px;display:flex;align-items:center;justify-content:center}
+.resize-splitter::after{content:"";width:3px;height:38px;border-radius:4px;background:#cbd5e1;transition:background .12s,width .12s}
+.resize-splitter:hover::after,.resize-splitter.dragging::after{width:5px;background:#2563eb}
+#bottom-splitter{height:10px;flex:0 0 10px;cursor:row-resize;touch-action:none;display:flex;align-items:center;justify-content:center}
+#bottom-splitter::after{content:"";height:3px;width:42px;border-radius:4px;background:#cbd5e1}
+#bottom-splitter:hover::after,#bottom-splitter.dragging::after{height:5px;background:#2563eb}
+.pane-toggle{flex:0 0 auto;padding:3px 8px;min-width:30px;min-height:28px;background:#e2e8f0;color:#1e3a8a;font-size:1rem;line-height:1}
+.sidebar-head,.drawer-title,.bottom-tool-head{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.sidebar-head h2{flex:1;margin:0!important;border:0!important;padding:0!important}
+.sidebar.collapsed{overflow:hidden;padding:5px;align-items:center}
+.sidebar.collapsed>:not(.sidebar-head){display:none!important}
+.sidebar.collapsed .sidebar-head{justify-content:center;width:100%}
+.sidebar.collapsed .sidebar-head h2{display:none}
+.tool-drawer.collapsed{overflow:hidden;padding:5px;align-items:center}
+.tool-drawer.collapsed>:not(.drawer-title){display:none!important}
+.tool-drawer.collapsed .drawer-title{writing-mode:vertical-rl;justify-content:flex-start;flex:1}
+.tool-drawer.collapsed .drawer-title .pane-toggle{writing-mode:horizontal-tb}
+#bottom-tools.collapsed{height:42px!important;min-height:42px!important;overflow:hidden;padding:5px 8px}
+#bottom-tools.collapsed #bottom-tool-content{display:none}
+.bottom-tool-head{height:30px;margin-bottom:5px}
+.bottom-tool-head .tool-tabs{flex:1}
+#bottom-tools .bottom-tool-head .tool-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+#bottom-tools.collapsed .bottom-tool-head{margin:0;height:30px}
+@media(max-width:950px){.resize-splitter,#bottom-splitter{display:none!important}.main{column-gap:7px!important}}
 @media(max-width:1120px){.main{grid-template-columns:minmax(320px,35vw) minmax(320px,1fr) minmax(220px,23vw);gap:6px;padding:6px}.preset-cards{gap:4px}.preset-card{padding:5px 6px}.preset-card .pc-title{font-size:.72rem}.preset-card .pc-sub{font-size:.56rem}}
 @media(max-width:950px){
   header{padding:7px 10px}.header-line{align-items:flex-start;flex-wrap:wrap;gap:3px 10px;white-space:normal;overflow:visible}header h1{font-size:1rem}.sub{flex:1 1 100%;font-size:.65rem;white-space:normal;overflow:visible;text-overflow:clip}
@@ -218,7 +245,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       <div class="preset-group">
         <div class="preset-group-label">摺紙</div>
         <div class="preset-cards">
-          <button type="button" class="preset-card" data-preset="foldNet" id="btn-fold-net"><span class="pc-title">摺紙網</span><span class="pc-sub">正方體十字網 · 可摺</span></button>
           <button type="button" class="preset-card" data-preset="foldTriAny" id="btn-fold-tri-any"><span class="pc-title">任意三角形</span><span class="pc-sub">平面底 · 可加摺痕</span></button>
           <button type="button" class="preset-card" data-preset="foldTriRight" id="btn-fold-tri-right"><span class="pc-title">直角三角形</span><span class="pc-sub">平面底 · 可加摺痕</span></button>
           <button type="button" class="preset-card" data-preset="foldTriIso" id="btn-fold-tri-iso"><span class="pc-title">等腰三角形</span><span class="pc-sub">平面底 · 可加摺痕</span></button>
@@ -300,7 +326,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     <div id="cut-list" class="tri-list"></div>
 
     <h2>④b 摺紙</h2>
-    <p class="note">先喺樣板「摺紙」揀平面圖形或摺紙網。平面底可加 <strong>1–2 條摺痕</strong>（揀邊界／現有頂點兩端）；非固定側繞摺痕旋轉，角度 0–180°。底區自動固定。</p>
+    <p class="note">先喺樣板「摺紙」揀平面圖形。平面底可加 <strong>1–2 條摺痕</strong>（揀邊界／現有頂點兩端）；非固定側繞摺痕旋轉，角度 0–180°。底區自動固定。</p>
     <label for="fold-crease">摺痕（預設／已加）</label>
     <select id="fold-crease" class="face-select"><option value="">— 載入摺紙後顯示 —</option></select>
     <div class="btn-row">
@@ -322,7 +348,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       <button type="button" id="btn-fold-reset" class="ghost">重設為平鋪</button>
       <button type="button" id="btn-fold-90" class="secondary">摺至 90°</button>
     </div>
-    <div id="fold-banner" class="mode-banner">請先喺樣板目錄揀摺紙平面圖形或「摺紙網」。</div>
+    <div id="fold-banner" class="mode-banner">請先喺樣板目錄揀摺紙平面圖形。</div>
 
     <h2>⑤ 標示夾角</h2>
     <p class="ang-note">唔使計度數——只需喺 3D 上<strong>視覺標示</strong>：圓弧、直角方塊、色楔、∠ABC 標籤。加入後一定畫喺模型上（唔依賴結果面板）。</p>
@@ -411,7 +437,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
           </div>
           <div class="fp-group-label">摺紙</div>
           <div class="btn-row">
-            <button type="button" id="fp-fold-net" class="ghost">摺紙網</button>
             <button type="button" id="fp-fold-square" class="ghost">正方形</button>
             <button type="button" id="fp-fold-tri-eq" class="ghost">等邊三角形</button>
             <button type="button" id="fp-fold-rect" class="ghost">長方形</button>
@@ -476,7 +501,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
                   <option value="slopePlane">斜面／山坡＋水平投影</option>
                 </optgroup>
                 <optgroup label="摺紙">
-                  <option value="foldNet">摺紙網（十字網）</option>
                   <option value="foldTriAny">任意三角形</option>
                   <option value="foldTriRight">直角三角形</option>
                   <option value="foldTriIso">等腰三角形</option>
@@ -516,7 +540,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
             <div>
               <label for="td-view">視角備註</label>
               <select id="td-view">
-                <option value="textbook">對齊課本視角</option>
                 <option value="default">一般視角</option>
                 <option value="">（由文字推斷）</option>
               </select>
@@ -537,7 +560,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     <p class="help">
       <strong>用法摘要</strong><br/>
       1) 左邊<strong>揀立體樣板</strong>→即時載入 3D。<br/>
-      2) 滑鼠拖曳旋轉、滾輪縮放；「對齊課本視角」。<br/>
+      2) 滑鼠拖曳旋轉、滾輪縮放；「重設視角」。<br/>
       3) 三角形／投影／棱上加點／切面（≥4點）／摺紙平面摺痕／夾角。<br/>
       4) 中點由「加中點」建立，並以 M、M1 等點名顯示；等腰／等邊用刻線標示。<br/>
       座標：Z 向上。詳見 使用說明.txt。
@@ -551,12 +574,11 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       <div id="hint">右鍵／左鍵旋轉 · 滾輪縮放 · 中鍵平移</div>
     </div>
     <div class="view-btns">
-      <button type="button" class="ok" id="btn-align-textbook">對齊課本視角</button>
       <button type="button" class="secondary" id="btn-reset-cam2">重設視角</button>
     </div>
   </section>
   <aside class="tool-drawer" id="tool-drawer" aria-label="切面及摺紙工具">
-    <div class="drawer-title">右側工具</div>
+    <div class="drawer-title"><span>右側工具</span><button type="button" class="pane-toggle" id="right-panel-toggle" aria-label="收合右側面板" title="收合右側面板">▶</button></div>
     <div class="tool-tabs" role="tablist" aria-label="右側工具選擇">
       <button type="button" class="tool-tab" data-right-tool="cut" aria-expanded="false">切面／切去</button>
       <button type="button" class="tool-tab" data-right-tool="fold" aria-expanded="false">④b 摺紙</button>
@@ -565,12 +587,12 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
   </aside>
 </div>
 <section id="bottom-tools" aria-label="立體三角學工具">
-  <div class="tool-tabs" role="tablist" aria-label="下方工具選擇">
+  <div class="bottom-tool-head"><div class="tool-tabs" role="tablist" aria-label="下方工具選擇">
     <button type="button" class="tool-tab" data-bottom-tool="triangle" aria-expanded="false">② 三角形</button>
     <button type="button" class="tool-tab" data-bottom-tool="projection" aria-expanded="false">③ 投影</button>
     <button type="button" class="tool-tab" data-bottom-tool="edge" aria-expanded="false">在棱上加點</button>
     <button type="button" class="tool-tab" data-bottom-tool="angle" aria-expanded="false">⑤ 標示夾角</button>
-  </div>
+  </div><button type="button" class="pane-toggle" id="bottom-panel-toggle" aria-label="收合下方面板" title="收合下方面板">▼</button></div>
   <div id="bottom-tool-content"></div>
 </section>
 
@@ -838,49 +860,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       camView: { ox: -0.6, oy: -2.85, oz: 1.1, fov: 36 }
     },
 
-    // 摺紙網：正方體十字展開（平鋪 z=0）；活頁可繞摺痕旋轉
-    foldNet: {
-      title: '摺紙網（正方體十字）',
-      points: {
-        // center square ABCD
-        A:[-1,-1,0], B:[1,-1,0], C:[1,1,0], D:[-1,1,0],
-        // right flap (attach BC): E,F
-        E:[3,-1,0], F:[3,1,0],
-        // left flap (attach AD): G,H
-        G:[-3,-1,0], H:[-3,1,0],
-        // front flap (attach AB): I,J
-        I:[-1,-3,0], J:[1,-3,0],
-        // back flap (attach DC): K,L
-        K:[-1,3,0], L:[1,3,0],
-        // top extension from back (6th face, attach KL): M,N
-        M:[-1,5,0], N:[1,5,0]
-      },
-      solid:[['A','B'],['B','C'],['C','D'],['D','A'],
-             ['B','E'],['E','F'],['F','C'],
-             ['D','H'],['H','G'],['G','A'],
-             ['A','I'],['I','J'],['J','B'],
-             ['D','K'],['K','L'],['L','C'],
-             ['K','M'],['M','N'],['N','L']],
-      dashed:[],
-      faces:[['A','B','C','D'],['B','E','F','C'],['A','D','H','G'],['A','B','J','I'],['D','C','L','K'],['K','L','N','M']],
-      demoTriangle:['A','B','C'],
-      faceTint: 0xfde68a,
-      faceOpacity: 0.38,
-      camView: { ox: 0.2, oy: -0.15, oz: 8.5, fov: 42 },
-      fold: {
-        pinned:['A','B','C','D'],
-        creases:[
-          {id:'right', hinge:['B','C'], flap:['E','F'], label:'右頁 BC'},
-          {id:'left', hinge:['A','D'], flap:['G','H'], label:'左頁 AD'},
-          {id:'front', hinge:['A','B'], flap:['I','J'], label:'前頁 AB'},
-          {id:'back', hinge:['D','C'], flap:['K','L','M','N'], label:'後頁 DC（含頂面）'}
-        ],
-        active:'back',
-        interactive:false,
-        maxCreases:1
-      }
-    },
-
     // ----- 摺紙平面底（可加 1–2 摺痕） -----
     foldTriAny: {
       title: '任意三角形（摺紙底）',
@@ -1038,6 +1017,58 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     }
     bindTabGroup('[data-bottom-tool]','data-bottom-tool',{triangle:triPane,projection:projPane,edge:edgePane,angle:anglePane});
     bindTabGroup('[data-right-tool]','data-right-tool',{cut:cutPane,fold:foldPane});
+    setupResizablePanels(sidebar);
+  }
+  function setupResizablePanels(sidebar){
+    var main=document.querySelector('.main'), view=document.querySelector('.viewport-wrap'), right=$('tool-drawer'), bottom=$('bottom-tools');
+    if(!main||!view||!right||!bottom) return;
+    var leftHead=document.createElement('div'); leftHead.className='sidebar-head';
+    var leftTitle=sidebar.querySelector(':scope > h2'); if(leftTitle) leftHead.appendChild(leftTitle);
+    var leftBtn=document.createElement('button'); leftBtn.type='button'; leftBtn.className='pane-toggle'; leftBtn.id='left-panel-toggle'; leftBtn.textContent='◀'; leftBtn.title='收合左側面板'; leftBtn.setAttribute('aria-label','收合左側面板'); leftHead.appendChild(leftBtn); sidebar.insertBefore(leftHead,sidebar.firstChild);
+    var leftW=Math.round(sidebar.getBoundingClientRect().width), rightW=Math.round(right.getBoundingClientRect().width), centerW=Math.round(view.getBoundingClientRect().width);
+    var lastLeft=leftW,lastRight=rightW, leftClosed=false,rightClosed=false;
+    var splitterA=document.createElement('div'); splitterA.className='resize-splitter'; splitterA.id='split-left'; splitterA.title='拖曳調整樣板及 3D 區域寬度'; splitterA.setAttribute('role','separator'); splitterA.setAttribute('aria-orientation','vertical');
+    var splitterB=document.createElement('div'); splitterB.className='resize-splitter'; splitterB.id='split-right'; splitterB.title='拖曳調整 3D 及右側工具寬度'; splitterB.setAttribute('role','separator'); splitterB.setAttribute('aria-orientation','vertical');
+    main.insertBefore(splitterA,view); main.insertBefore(splitterB,right);
+    function available(){return Math.max(540,main.clientWidth-parseFloat(getComputedStyle(main).paddingLeft)-parseFloat(getComputedStyle(main).paddingRight)-16);}
+    function setCols(){
+      if(window.innerWidth<=950){main.style.gridTemplateColumns='';return;}
+      var total=available(), minL=leftClosed?36:190,minC=300,minR=rightClosed?36:180;
+      leftW=Math.max(minL,leftW); rightW=Math.max(minR,rightW);
+      if(leftW+rightW>total-minC){var extra=leftW+rightW-(total-minC); if(rightClosed||leftW>rightW) leftW=Math.max(minL,leftW-extra); else rightW=Math.max(minR,rightW-extra);}
+      centerW=Math.max(minC,total-leftW-rightW);
+      main.style.gridTemplateColumns=leftW+'px 8px minmax('+minC+'px, '+centerW+'px) 8px '+rightW+'px';
+    }
+    setCols();
+    function dragSplit(el,which){
+      el.addEventListener('pointerdown',function(e){if(window.innerWidth<=950)return; e.preventDefault(); el.classList.add('dragging'); el.setPointerCapture(e.pointerId); var start=e.clientX, l=leftW, r=rightW;
+        function move(ev){var dx=ev.clientX-start; if(which==='left'){leftW=Math.max(leftClosed?36:190,l+dx); centerW-=dx;}else{rightW=Math.max(rightClosed?36:180,r-dx); centerW+=dx;} setCols();}
+        function end(){el.classList.remove('dragging');el.removeEventListener('pointermove',move);el.removeEventListener('pointerup',end);el.removeEventListener('pointercancel',end);if(!leftClosed)lastLeft=leftW;if(!rightClosed)lastRight=rightW;}
+        el.addEventListener('pointermove',move);el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end);
+      });
+    }
+    dragSplit(splitterA,'left'); dragSplit(splitterB,'right');
+    leftBtn.addEventListener('click',function(){
+      if(leftClosed){leftClosed=false;sidebar.classList.remove('collapsed');leftW=Math.max(190,Math.min(lastLeft,available()-rightW-300));leftBtn.textContent='◀';leftBtn.title='收合左側面板';leftBtn.setAttribute('aria-label','收合左側面板');}
+      else{lastLeft=leftW;leftClosed=true;leftW=36;sidebar.classList.add('collapsed');leftBtn.textContent='▶';leftBtn.title='展開左側面板';leftBtn.setAttribute('aria-label','展開左側面板');}
+      setCols();
+    });
+    var rightBtn=$('right-panel-toggle');
+    if(rightBtn) rightBtn.addEventListener('click',function(){
+      if(rightClosed){rightClosed=false;right.classList.remove('collapsed');rightW=Math.max(180,Math.min(lastRight,available()-leftW-300));rightBtn.textContent='▶';rightBtn.title='收合右側面板';rightBtn.setAttribute('aria-label','收合右側面板');}
+      else{lastRight=rightW;rightClosed=true;rightW=36;right.classList.add('collapsed');rightBtn.textContent='◀';rightBtn.title='展開右側面板';rightBtn.setAttribute('aria-label','展開右側面板');}
+      setCols();
+    });
+    var bottomHandle=document.createElement('div'); bottomHandle.id='bottom-splitter'; bottomHandle.title='拖曳調整下方面板高度'; bottomHandle.setAttribute('role','separator'); bottomHandle.setAttribute('aria-orientation','horizontal'); main.insertAdjacentElement('afterend',bottomHandle);
+    var bottomBtn=$('bottom-panel-toggle'), bottomH=Math.round(bottom.getBoundingClientRect().height), lastBottom=bottomH, bottomClosed=false;
+    bottom.style.height=bottomH+'px'; bottom.style.flexBasis=bottomH+'px';
+    if(bottomBtn) bottomBtn.addEventListener('click',function(){bottomClosed=!bottomClosed;bottom.classList.toggle('collapsed',bottomClosed);if(bottomClosed){lastBottom=bottomH;bottom.style.height='42px';bottom.style.flexBasis='42px';bottomBtn.textContent='▲';bottomBtn.title='展開下方面板';bottomBtn.setAttribute('aria-label','展開下方面板');}else{bottomH=lastBottom;bottom.style.height=bottomH+'px';bottom.style.flexBasis=bottomH+'px';bottomBtn.textContent='▼';bottomBtn.title='收合下方面板';bottomBtn.setAttribute('aria-label','收合下方面板');}});
+    bottomHandle.addEventListener('pointerdown',function(e){if(window.innerWidth<=950||bottomClosed)return;e.preventDefault();bottomHandle.classList.add('dragging');bottomHandle.setPointerCapture(e.pointerId);var y=e.clientY,start=bottomH;
+      function move(ev){bottomH=Math.max(84,Math.min(window.innerHeight-250,start+y-ev.clientY));bottom.style.height=bottomH+'px';bottom.style.flexBasis=bottomH+'px';}
+      function end(){bottomHandle.classList.remove('dragging');bottomHandle.removeEventListener('pointermove',move);bottomHandle.removeEventListener('pointerup',end);bottomHandle.removeEventListener('pointercancel',end);lastBottom=bottomH;}
+      bottomHandle.addEventListener('pointermove',move);bottomHandle.addEventListener('pointerup',end);bottomHandle.addEventListener('pointercancel',end);
+    });
+    window.addEventListener('resize',setCols);
   }
   arrangeToolLayout();
   function setStatus(msg, kind){
@@ -1480,7 +1511,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       'You are helping a Hong Kong secondary maths teacher. '+
       'The image is a 2D textbook line drawing of a solid (cube, box, triangular prism, right/isosceles triangular prism, tetrahedron, square/rect/equilateral pyramid, tower+horizontal triangle, slope plane, trapezoid prism, or Figure 5b pyramid). '+
       'Return ONLY JSON (no markdown) with this schema:\n'+
-      '{"title":"string","type":"cube|box|triPrism|triRightPrism|tetraABCD|tetraRightApex|pyramid5b|sqPyramid|rectPyramid3perp|towerHoriz|slopePlane|isoTriPrism|eqTriPyramid|trapPrism|rightTrapPrism|tetraIsos|foldNet|foldTriAny|foldTriRight|foldTriIso|foldTriEq|foldSquare|foldRect|foldTrap|foldPara|foldRhombus|foldKite|foldQuadIrr|other",'+
+      '{"title":"string","type":"cube|box|triPrism|triRightPrism|tetraABCD|tetraRightApex|pyramid5b|sqPyramid|rectPyramid3perp|towerHoriz|slopePlane|isoTriPrism|eqTriPyramid|trapPrism|rightTrapPrism|tetraIsos|foldTriAny|foldTriRight|foldTriIso|foldTriEq|foldSquare|foldRect|foldTrap|foldPara|foldRhombus|foldKite|foldQuadIrr|other",'+
       '"points":{"A":[x,y,z],...},"solid":[["A","B"],...],"dashed":[["A","C"],...],'+
       '"faces":[["A","B","C","D"],...],"notes":"Traditional Chinese note"}\n'+
       'Use Z-up coordinates, reasonable unit sizes around 1–4. Label vertices with capital letters.';
@@ -3695,6 +3726,11 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     var id='c'+(foldState.meta.creases.length+1);
     var crease={id:id, hinge:part.hinge.slice(), flap:part.flap.slice(), label:'摺痕 '+part.hinge.join('-'), user:true};
     foldState.meta.creases.push(crease);
+    // New edge-points are created after the preset snapshot; save their flat
+    // positions now so later slider updates always fold from the same baseline.
+    Object.keys(state.pts).forEach(function(n){
+      if(!Object.prototype.hasOwnProperty.call(foldState.basePts,n)) foldState.basePts[n]=state.pts[n].toArray();
+    });
     // pin = union of pinned regions (base): start with all non-flap of first crease
     if(!foldState.meta.pinned || !foldState.meta.pinned.length){
       foldState.meta.pinned=part.pinned.slice();
@@ -3731,7 +3767,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
   function initFoldFromModel(model){
     foldState={ active:false, angle:0, angle2:0, creaseId:null, basePts:null, modelKey:null, meta:null, angles:{} };
     if(!model || !model.fold) {
-      if($('fold-banner')) $('fold-banner').textContent='請先喺樣板目錄揀摺紙平面圖形或「摺紙網」。';
+      if($('fold-banner')) $('fold-banner').textContent='請先喺樣板目錄揀摺紙平面圖形。';
       refreshFoldCreaseSelect();
       return;
     }
@@ -3754,7 +3790,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     if(foldState.meta.interactive){
       if($('fold-banner')) $('fold-banner').textContent='已載入平面底：按「加摺痕」揀邊界兩端（可加 1–2 條），再用角度滑桿摺起非固定側。';
     } else {
-      if($('fold-banner')) $('fold-banner').textContent='已載入摺紙網：揀摺痕，拖動角度滑桿摺起活頁。固定點：'+(model.fold.pinned||[]).join('');
+      if($('fold-banner')) $('fold-banner').textContent='已載入摺紙圖形：選擇摺痕並拖動角度滑桿。';
     }
     try{ rebuildAuxVisuals(); }catch(e){}
     try{ applyAllFolds(); }catch(e2){}
@@ -3965,6 +4001,8 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       if(!state.pts[n]) state.pts[n]=new THREE.Vector3();
       state.pts[n].set(p[0],p[1],p[2]);
     });
+    // Refresh driven edge-points from the restored flat vertices before folding.
+    recomputeMidpoints(false);
     var creases=foldState.meta.creases||[];
     if(foldState.meta.interactive){
       // apply up to 2 creases sequentially with their angles
@@ -4508,8 +4546,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     if(/菱形.*摺紙|foldRhombus/i.test(raw)) return 'foldRhombus';
     if(/鳶形.*摺紙|foldKite/i.test(raw)) return 'foldKite';
     if(/不規則四邊形.*摺|foldQuadIrr/i.test(raw)) return 'foldQuadIrr';
-    if(/摺紙網|十字網|foldnet|origami\s*net|展開網/i.test(raw))
-      return 'foldNet';
     if(/四面體|三角錐|tetra(\s|-)?hedron|tetraabcd|\btetra\b/i.test(raw) || /tetra/i.test(t))
       return 'tetraABCD';
     if(/正方體|立方體|\bcube\b/i.test(raw)) return 'cube';
@@ -4639,8 +4675,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
         return '梯形底直立柱 ABCD-EFGH';
       if(key==='tetraIsos')
         return '等腰四面體 ABCD（垂足 P）';
-      if(key==='foldNet')
-        return '摺紙網（正方體十字）';
       var FT={foldTriAny:'任意三角形（摺紙底）',foldTriRight:'直角三角形（摺紙底）',foldTriIso:'等腰三角形（摺紙底）',foldTriEq:'等邊三角形（摺紙底）',foldSquare:'正方形（摺紙底）',foldRect:'長方形（摺紙底）',foldTrap:'梯形（摺紙底）',foldPara:'平行四邊形（摺紙底）',foldRhombus:'菱形（摺紙底）',foldKite:'鳶形（摺紙底）',foldQuadIrr:'不規則四邊形（摺紙底）'};
       if(FT[key]) return FT[key];
     }
@@ -4658,7 +4692,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     var tint = ($('td-tint') && $('td-tint').value) || '';
     var view = ($('td-view') && $('td-view').value) || '';
     if(type){
-      var typeLabel = {tetraABCD:'四面體（邊不相等）',tetraRightApex:'直角頂四面體',cube:'正方體',box:'長方體',triPrism:'等邊三角棱柱',triRightPrism:'直角三角柱',pyramid5b:'角錐 V–AMNC',sqPyramid:'正方角錐',rectPyramid3perp:'長方角錐',towerHoriz:'鉛垂塔＋水平三角',slopePlane:'斜面／山坡',isoTriPrism:'等腰底三角柱',eqTriPyramid:'正四面體',trapPrism:'梯形底直立柱',rightTrapPrism:'直角梯形底直立柱',tetraIsos:'等腰四面體',foldNet:'摺紙網',foldTriAny:'任意三角形',foldTriRight:'直角三角形',foldTriIso:'等腰三角形',foldTriEq:'等邊三角形',foldSquare:'正方形',foldRect:'長方形',foldTrap:'梯形',foldPara:'平行四邊形',foldRhombus:'菱形',foldKite:'鳶形',foldQuadIrr:'不規則四邊形'}[type]||type;
+      var typeLabel = {tetraABCD:'四面體（邊不相等）',tetraRightApex:'直角頂四面體',cube:'正方體',box:'長方體',triPrism:'等邊三角棱柱',triRightPrism:'直角三角柱',pyramid5b:'角錐 V–AMNC',sqPyramid:'正方角錐',rectPyramid3perp:'長方角錐',towerHoriz:'鉛垂塔＋水平三角',slopePlane:'斜面／山坡',isoTriPrism:'等腰底三角柱',eqTriPyramid:'正四面體',trapPrism:'梯形底直立柱',rightTrapPrism:'直角梯形底直立柱',tetraIsos:'等腰四面體',foldTriAny:'任意三角形',foldTriRight:'直角三角形',foldTriIso:'等腰三角形',foldTriEq:'等邊三角形',foldSquare:'正方形',foldRect:'長方形',foldTrap:'梯形',foldPara:'平行四邊形',foldRhombus:'菱形',foldKite:'鳶形',foldQuadIrr:'不規則四邊形'}[type]||type;
       parts.push('立體類型：'+typeLabel);
     }
     if(verts.trim()) parts.push('頂點：'+verts.trim());
@@ -4736,7 +4770,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       summary.push('面著色＝'+tintInfo.label);
     } else if(key==='tetraABCD'){
       summary.push('面著色＝淡綠（四面體預設）');
-    } else if(key==='triRightPrism' || key==='sqPyramid' || key==='rectPyramid3perp' || key==='tetraRightApex' || key==='towerHoriz' || key==='slopePlane' || key==='isoTriPrism' || key==='eqTriPyramid' || key==='trapPrism' || key==='rightTrapPrism' || key==='tetraIsos' || key==='foldNet' || key==='foldTriAny' || key==='foldTriRight' || key==='foldTriIso' || key==='foldTriEq' || key==='foldSquare' || key==='foldRect' || key==='foldTrap' || key==='foldPara' || key==='foldRhombus' || key==='foldKite' || key==='foldQuadIrr'){
+    } else if(key==='triRightPrism' || key==='sqPyramid' || key==='rectPyramid3perp' || key==='tetraRightApex' || key==='towerHoriz' || key==='slopePlane' || key==='isoTriPrism' || key==='eqTriPyramid' || key==='trapPrism' || key==='rightTrapPrism' || key==='tetraIsos' || key==='foldTriAny' || key==='foldTriRight' || key==='foldTriIso' || key==='foldTriEq' || key==='foldSquare' || key==='foldRect' || key==='foldTrap' || key==='foldPara' || key==='foldRhombus' || key==='foldKite' || key==='foldQuadIrr'){
       summary.push('面著色＝樣板淡色');
     } else {
       summary.push('面著色＝預設');
@@ -4790,7 +4824,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     if(/triright|right.?prism/i.test(m)) return 'triRightPrism';
     if(/towerhoriz|tower/i.test(m)) return 'towerHoriz';
     if(/slopeplane|slope/i.test(m)) return 'slopePlane';
-    if(/foldnet|摺紙網|十字網/i.test(m) || /摺紙網|十字網/.test(title)) return 'foldNet';
     if(/tetra/i.test(m) || /四面體|tetra/i.test(title)) return 'tetraABCD';
     if(/5b|pyramid/i.test(m) || /角錐\s*V|V[–\-]AMNC|5\s*\(\s*b\s*\)|Figure\s*5/i.test(title)) return 'pyramid5b';
     if(/triprism/i.test(m) || /三角棱柱/i.test(title)) return 'triPrism';
@@ -4807,7 +4840,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     if(names.length===4 && names.indexOf('D')>=0 && names.indexOf('C')>=0 && names.indexOf('E')<0 && /塔|tower/i.test(title)) return 'towerHoriz';
     if(names.length===4 && names.indexOf('D')>=0 && names.indexOf('E')<0) return 'tetraABCD';
     if(names.length===8 && /梯形|trap/i.test(title)) return detectSolidKey(title)||'trapPrism';
-    if(names.indexOf('M')>=0 && names.indexOf('N')>=0 && names.indexOf('I')>=0 && names.indexOf('E')>=0 && /摺紙|foldNet|十字/i.test(title)) return 'foldNet';
     if(names.length===8) return /正方/.test(title) ? 'cube' : 'box';
     if(names.length===6 && names.indexOf('V')>=0) return 'pyramid5b';
     if(names.length===6 && /等腰|iso/i.test(title)) return 'isoTriPrism';
@@ -4882,9 +4914,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     if(key==='tetraIsos'){
       return '等腰四面體 ABCD，AD＝AC＝BC＝BD，P 為 AD 上由 B 所作垂足';
     }
-    if(key==='foldNet'){
-      return '摺紙網（正方體十字展開），可調摺角';
-    }
     var foldTitles={
       foldTriAny:'任意三角形（摺紙底）', foldTriRight:'直角三角形（摺紙底）',
       foldTriIso:'等腰三角形（摺紙底）', foldTriEq:'等邊三角形（摺紙底）',
@@ -4947,7 +4976,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     else if(key==='trapPrism' && $('td-verts')) $('td-verts').value = 'ABCD-EFGH，梯形底';
     else if(key==='rightTrapPrism' && $('td-verts')) $('td-verts').value = 'ABCD-EFGH，直角梯形底';
     else if(key==='tetraIsos' && $('td-verts')) $('td-verts').value = 'ABCD，P 在 AD';
-    else if(key==='foldNet' && $('td-verts')) $('td-verts').value = '十字網 ABCD＋活頁';
     else if(/^fold(Tri|Square|Rect|Trap|Para|Rhombus|Kite|Quad)/.test(key) && $('td-verts')) $('td-verts').value = '平面摺紙底';
     else if($('td-verts')) $('td-verts').value = Object.keys(model.points||{}).join('');
 
@@ -5195,7 +5223,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
   if($('fp-eq-pyr')) $('fp-eq-pyr').addEventListener('click', function(){ pickPresetFromFail('eqTriPyramid'); });
   if($('fp-trap')) $('fp-trap').addEventListener('click', function(){ pickPresetFromFail('trapPrism'); });
   if($('fp-tetra-isos')) $('fp-tetra-isos').addEventListener('click', function(){ pickPresetFromFail('tetraIsos'); });
-  if($('fp-fold-net')) $('fp-fold-net').addEventListener('click', function(){ pickPresetFromFail('foldNet'); });
   if($('fp-fold-square')) $('fp-fold-square').addEventListener('click', function(){ pickPresetFromFail('foldSquare'); });
   if($('fp-fold-tri-eq')) $('fp-fold-tri-eq').addEventListener('click', function(){ pickPresetFromFail('foldTriEq'); });
   if($('fp-fold-rect')) $('fp-fold-rect').addEventListener('click', function(){ pickPresetFromFail('foldRect'); });
@@ -5599,7 +5626,7 @@ $('btn-pick-tri').addEventListener('click', function(){
   });
   if($('btn-fold-add-crease')) $('btn-fold-add-crease').addEventListener('click', function(){
     if(!foldState.active || !foldState.meta || !foldState.meta.interactive){
-      setStatus('請先喺樣板揀平面摺紙圖形（非僅十字網預設摺痕）。','warn'); return;
+      setStatus('請先喺樣板揀平面摺紙圖形。','warn'); return;
     }
     var maxC=foldState.meta.maxCreases||2;
     if((foldState.meta.creases||[]).length>=maxC){
