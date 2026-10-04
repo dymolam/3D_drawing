@@ -184,7 +184,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
         <div class="preset-cards">
           <button type="button" class="preset-card" data-preset="tetraABCD" id="btn-tetra"><span class="pc-title">四面體（邊不相等）</span><span class="pc-sub">D–ABC · AC 虛線 · 淡綠</span></button>
           <button type="button" class="preset-card" data-preset="tetraRightApex" id="btn-tetra-right"><span class="pc-title">直角頂四面體</span><span class="pc-sub">OABC · CM⊥AB</span></button>
-          <button type="button" class="preset-card" data-preset="tetraIsos" id="btn-tetra-isos"><span class="pc-title">等腰四面體</span><span class="pc-sub">AD = BC · BP⊥AD</span></button>
+          <button type="button" class="preset-card" data-preset="tetraIsos" id="btn-tetra-isos"><span class="pc-title">等腰四面體</span><span class="pc-sub">AD = AC = BC = BD · BP⊥AD</span></button>
         </div>
       </div>
       <div class="preset-group">
@@ -262,6 +262,10 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       <button type="button" id="btn-add-mid" class="secondary" disabled>加中點 (t=0.5)</button>
       <button type="button" id="btn-mid-cancel" class="ghost">取消</button>
     </div>
+    <label for="new-point-name">新加點名稱（留空自動命名）</label>
+    <input id="new-point-name" type="text" maxlength="1" placeholder="例如：P" autocomplete="off" style="width:100%;font:inherit;font-size:.8rem;padding:6px 8px;border:1px solid var(--border);border-radius:6px"/>
+    <div class="btn-row"><button type="button" id="btn-move-new-points" class="ghost">拖動新加點：關</button></div>
+    <p class="note" style="margin:0">新點可改名稱、輸入座標，或開啟拖動模式後直接拖曳。</p>
     <div id="mid-list" class="tri-list"></div>
     <p class="note" style="margin-top:8px">切去／切面：須選 <strong>至少 4 個點</strong>（棱上點或頂點）。「顯示切面」繪淡色切面多邊形（近共面點）；「切去」：<strong>所選點圍成的立體會被切去</strong>（凸包塊從本體移除，剩餘補上切面；角切＝頂點＋棱上點 → 切去小角錐／四面體）。</p>
     <div id="cut-slots" class="mid-slots"></div>
@@ -681,7 +685,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       faceTint: 0xbfdbfe,
       faceOpacity: 0.36,
       rightAngles:[['O','C','A'],['M','C','A']],
-      dashThick: true,
       camView: { ox: -0.85, oy: -2.7, oz: 1.05, fov: 36 }
     },
     // 例8：鉛垂塔 CD＋水平面三角形 ABC（C 為塔底）
@@ -699,6 +702,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       faceTint: 0xa5c4fc,
       faceOpacity: 0.34,
       rightAngles:[['C','A','D']],
+      planeRightAngles:[['C','A','B']],
       camView: { ox: 0.35, oy: -2.9, oz: 1.05, fov: 38 }
     },
     // §10.2：斜面／山坡＋水平投影（簡易可旋轉）
@@ -778,21 +782,21 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       rightAngles:[['A','B','E']],
       camView:{ox:0.5,oy:-2.8,oz:1.1,fov:40}
     },
-    // 10A.20：等腰四面體 ABCD；BC=AD，BP⊥AD，AC、AB、BD 互不相等；不畫 CP、CD
+    // 10A.20：等腰四面體 ABCD；AD=AC=BC=BD，BP⊥AD；不畫 CP、CD
     tetraIsos: {
       title: '等腰四面體 ABCD（垂足 P）',
       points: {
-        A:[-1.65,0,0], B:[0.499,0.88,3.208], C:[0.499,-2.42,3.208], D:[1.65,0,0],
-        P:[0.499,0,0]
+        A:[-1.65,0,0], B:[0.8,1,3.027788], C:[-2.459224,0.5,3.159930], D:[1.65,0,0],
+        P:[0.8,0,0]
       },
       solid:[['A','B'],['B','C'],['C','A'],['A','D'],['B','D'],['B','P']],
       dashed:[],
       faces:[['A','B','C'],['A','B','D'],['A','C','D'],['B','C','D']],
       demoTriangle:['A','B','D'],
-      equalEdgePairs:[[ ['A','D'], ['B','C'] ]],
+      equalEdgePairs:[[ ['A','D'], ['A','C'], ['B','C'], ['B','D'] ]],
+      disableAutoEqualEdges:true,
       faceTint: 0xb8e0c8,
       faceOpacity: 0.36,
-      dashThick: true,
       camView: { ox: -0.6, oy: -2.85, oz: 1.1, fov: 36 }
     },
 
@@ -996,7 +1000,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     var points = {}, names=[];
     rows.forEach(function(tr){
       var name = tr.dataset.name;
-      var xs = tr.querySelectorAll('input');
+      var xs = tr.querySelectorAll('input[type="number"]');
       var x = Number(xs[0].value), y=Number(xs[1].value), z=Number(xs[2].value);
       if(!name || !isFinite(x)||!isFinite(y)||!isFinite(z)) return;
       points[name]=[x,y,z]; names.push(name);
@@ -1485,7 +1489,8 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
 
   var wrap=$('canvas-wrap');
   var scene, camera, renderer, controls, contentRoot, labelRoot, triRoot, auxRoot;
-  var state={ pts:{}, meshes:{}, labels:{}, solidLines:[], dashLines:[], faceMeshes:[], solidKeys:[], dashKeys:[], faceDefs:[], rightAngles:[], equalEdgePairs:[], towerSegment:null, towerMesh:null, faceColors:null, distinctFaceColors:false };
+  var state={ pts:{}, meshes:{}, labels:{}, solidLines:[], dashLines:[], faceMeshes:[], solidKeys:[], dashKeys:[], faceDefs:[], rightAngles:[], equalEdgePairs:[], disableAutoEqualEdges:false, towerSegment:null, towerMesh:null, faceColors:null, distinctFaceColors:false };
+  var moveNewPoints=false, draggedPoint=null, dragPlane=null;
 
   function initThree(){
     if(typeof THREE==='undefined'){
@@ -1528,6 +1533,8 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     animate();
     // click pick
     renderer.domElement.addEventListener('pointerdown', onPointerDown);
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', onPointerUp);
     hud('就緒 · 請選預設或上傳線稿');
     return true;
     }catch(e){
@@ -1562,7 +1569,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     ctx.fillStyle='#0f172a'; ctx.fillText(text,64,68);
     var tex=new THREE.CanvasTexture(canvas); tex.minFilter=THREE.LinearFilter;
     var mat=new THREE.SpriteMaterial({map:tex, transparent:true, depthTest:false});
-    var spr=new THREE.Sprite(mat); spr.scale.set(0.25,0.25,1); spr.renderOrder=10;
+    var spr=new THREE.Sprite(mat); spr.scale.set(0.125,0.125,1); spr.renderOrder=10;
     spr.userData.vertexName=text;
     return spr;
   }
@@ -1697,15 +1704,17 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     if(!A||!B||!contentRoot) return;
     var axis=B.clone().sub(A), height=axis.length();
     if(height<1e-8) return;
+    var footGap=Math.min(0.23,height*0.18), shaftHeight=height-footGap;
     var mesh=new THREE.Mesh(
-      new THREE.CylinderGeometry(0.105,0.16,height,8,1,false),
+      new THREE.CylinderGeometry(0.022,0.032,shaftHeight,8,1,false),
       new THREE.MeshStandardMaterial({color:0x64748b,metalness:0.12,roughness:0.62})
     );
     mesh.name='tower:'+a+'-'+b;
     mesh.userData.towerNames=[a,b];
-    mesh.userData.towerBaseHeight=height;
-    mesh.position.copy(A).add(B).multiplyScalar(0.5);
-    mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),axis.normalize());
+    mesh.userData.towerBaseHeight=shaftHeight;
+    mesh.userData.towerFootGapRatio=footGap/height;
+    mesh.position.copy(A).addScaledVector(axis.clone().normalize(),footGap+shaftHeight/2);
+    mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),axis.clone().normalize());
     mesh.renderOrder=3;
     contentRoot.add(mesh);
     state.towerMesh=mesh;
@@ -1748,7 +1757,9 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     currentFaces = model.faces || [];
     currentDemo = model.demoTriangle || null;
     state.rightAngles = model.rightAngles || [];
+    state.planeRightAngles = model.planeRightAngles || [];
     state.equalEdgePairs = model.equalEdgePairs || [];
+    state.disableAutoEqualEdges = !!model.disableAutoEqualEdges;
     state.towerSegment = model.towerSegment || null;
     state.faceColors = model.faceColors || null;
     state.distinctFaceColors = !!model.distinctFaceColors;
@@ -1781,7 +1792,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     var freeMat=new THREE.MeshStandardMaterial({color:0x111827, metalness:0.1, roughness:0.55});
     Object.keys(state.pts).forEach(function(name){
       // unique SphereGeometry per vertex — shared geo + dispose() previously broke redraws on some GPUs
-      var sphereGeo=new THREE.SphereGeometry(0.07,20,14);
+      var sphereGeo=new THREE.SphereGeometry(0.035,20,14);
       var mesh=new THREE.Mesh(sphereGeo, freeMat.clone());
       mesh.name='vert:'+name;
       mesh.position.copy(state.pts[name]);
@@ -1789,7 +1800,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       contentRoot.add(mesh); state.meshes[name]=mesh;
       var lab=makeLabel(name);
       lab.name='label:'+name;
-      lab.position.copy(state.pts[name]).add(new THREE.Vector3(0.08,0.08,0.13));
+      lab.position.copy(state.pts[name]).add(new THREE.Vector3(0.04,0.04,0.065));
       contentRoot.add(lab); state.labels[name]=lab;
     });
     state.solidKeys.forEach(function(pair,i){
@@ -1842,15 +1853,16 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       if(ta&&tb){
         var td=tb.clone().sub(ta), th=td.length();
         if(th>1e-8){
-          state.towerMesh.position.copy(ta).add(tb).multiplyScalar(0.5);
-          state.towerMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),td.normalize());
-          state.towerMesh.scale.y=th/(state.towerMesh.userData.towerBaseHeight||th);
+          var tn=td.clone().normalize(), gap=th*(state.towerMesh.userData.towerFootGapRatio||0);
+          state.towerMesh.position.copy(ta).addScaledVector(tn,gap+(th-gap)/2);
+          state.towerMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),tn);
+          state.towerMesh.scale.y=(th-gap)/(state.towerMesh.userData.towerBaseHeight||th);
         }
       }
     }
     Object.keys(state.meshes).forEach(function(name){
       state.meshes[name].position.copy(state.pts[name]);
-      if(state.labels[name]) state.labels[name].position.copy(state.pts[name]).add(new THREE.Vector3(0.08,0.08,0.13));
+      if(state.labels[name]) state.labels[name].position.copy(state.pts[name]).add(new THREE.Vector3(0.04,0.04,0.065));
     });
     state.solidKeys.forEach(function(pair,i){ updateLine(state.solidLines[i], state.pts[pair[0]], state.pts[pair[1]]); });
     state.dashKeys.forEach(function(pair,i){ updateLine(state.dashLines[i], state.pts[pair[0]], state.pts[pair[1]]); });
@@ -1958,7 +1970,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
   }
 
   function onPointerDown(ev){
-    if(!pickKind && !picking) return;
     if(!renderer) return;
     // only primary button
     if(ev.button!==0) return;
@@ -1969,12 +1980,56 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     );
     var ray=new THREE.Raycaster();
     ray.setFromCamera(mouse, camera);
+    if(moveNewPoints){
+      var moveName=null, closest=18;
+      Object.keys(state.meshes).forEach(function(n){
+        var m=state.meshes[n]; if(!m.userData||!m.userData.userAdded) return;
+        var s=m.position.clone().project(camera), sx=rect.left+(s.x+1)*rect.width/2, sy=rect.top+(1-s.y)*rect.height/2;
+        var dist=Math.hypot(ev.clientX-sx,ev.clientY-sy);
+        if(s.z>=-1&&s.z<=1&&dist<closest){closest=dist;moveName=n;}
+      });
+      if(moveName){
+        draggedPoint=moveName;
+        var planeNormal=camera.getWorldDirection(new THREE.Vector3()).normalize();
+        dragPlane=new THREE.Plane().setFromNormalAndCoplanarPoint(planeNormal,state.pts[draggedPoint]);
+        if(controls) controls.enabled=false;
+        ev.preventDefault(); ev.stopPropagation();
+        setStatus('拖動新點 '+draggedPoint+'；放開滑鼠即可。','ok');
+      }
+      return;
+    }
+    if(!pickKind && !picking) return;
     var meshes=Object.keys(state.meshes).map(function(n){return state.meshes[n];});
     var hits=ray.intersectObjects(meshes, false);
     if(hits.length){
       tryPickVertex(hits[0].object.userData.vertexName);
       ev.stopPropagation();
     }
+  }
+  function onPointerMove(ev){
+    if(!draggedPoint||!renderer||!dragPlane) return;
+    var rect=renderer.domElement.getBoundingClientRect();
+    var mouse=new THREE.Vector2(((ev.clientX-rect.left)/rect.width)*2-1,-((ev.clientY-rect.top)/rect.height)*2+1);
+    var ray=new THREE.Raycaster(); ray.setFromCamera(mouse,camera);
+    var point=new THREE.Vector3();
+    if(!ray.ray.intersectPlane(dragPlane,point)) return;
+    state.pts[draggedPoint].copy(point);
+    if(state.meshes[draggedPoint]) state.meshes[draggedPoint].position.copy(point);
+    if(state.labels[draggedPoint]) state.labels[draggedPoint].position.copy(point).add(new THREE.Vector3(0.04,0.04,0.065));
+    midpoints.forEach(function(mp){if(mp.name===draggedPoint)mp.manual=true;});
+    projections.forEach(function(pr){if(pr.name===draggedPoint)pr.manual=true;});
+    var row=$('vert-body').querySelector('tr[data-name="'+draggedPoint+'"]');
+    if(row){var xs=row.querySelectorAll('input[type="number"]');if(xs.length>=3){xs[0].value=point.x;xs[1].value=point.y;xs[2].value=point.z;}}
+    refreshLiveMetrics();
+    forceResizeAndRender();
+    ev.preventDefault();
+  }
+  function onPointerUp(){
+    if(!draggedPoint) return;
+    draggedPoint=null; dragPlane=null;
+    if(controls) controls.enabled=true;
+    setStatus('新點位置已更新。','ok');
+    forceResizeAndRender();
   }
 
   // (tryPickVertex defined in projection/angle section above)
@@ -2136,6 +2191,21 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     }
     return 'H'+Date.now();
   }
+  function pointNameOrAuto(autoName){
+    var el=$('new-point-name');
+    var wanted=el ? String(el.value||'').trim().toUpperCase() : '';
+    if(!wanted) return autoName;
+    if(!/^[A-Z]$/.test(wanted)){
+      setStatus('新點名稱請用一個英文字母 A–Z。','warn');
+      return null;
+    }
+    if(state.pts[wanted] || $('vert-body').querySelector('tr[data-name="'+wanted+'"]')){
+      setStatus('名稱 '+wanted+' 已使用，請改用另一個英文字母。','warn');
+      return null;
+    }
+    el.value='';
+    return wanted;
+  }
   function refreshFaceSelect(){
     function fillFaceSel(sel, placeholder){
       if(!sel) return;
@@ -2159,11 +2229,12 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     var isProj = (tag===true || tag==='proj');
     var isMid = (tag==='mid');
     var isEdge = (tag==='edge');
+    var canEditName = (tag===true || isProj || isMid || isEdge);
     var col = isProj ? 0x0369a1 : (isMid ? 0x059669 : (isEdge ? 0xea580c : 0x111827));
     var badge = isProj ? '<span class="tag-proj">垂足</span>' : (isMid ? '<span class="tag-mid">中點</span>' : (isEdge ? '<span class="tag-edge">棱點</span>' : ''));
     state.pts[name]=vec.clone();
     if(!state.meshes[name]){
-      var sphereGeo=new THREE.SphereGeometry(0.07,20,14);
+      var sphereGeo=new THREE.SphereGeometry(0.035,20,14);
       var mat=new THREE.MeshStandardMaterial({
         color: col, metalness:0.1, roughness:0.55
       });
@@ -2171,14 +2242,15 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       mesh.name='vert:'+name;
       mesh.position.copy(vec);
       mesh.userData.vertexName=name;
+      mesh.userData.userAdded=canEditName;
       contentRoot.add(mesh); state.meshes[name]=mesh;
       var lab=makeLabel(name);
       lab.name='label:'+name;
-      lab.position.copy(vec).add(new THREE.Vector3(0.08,0.08,0.13));
+      lab.position.copy(vec).add(new THREE.Vector3(0.04,0.04,0.065));
       contentRoot.add(lab); state.labels[name]=lab;
     } else {
       state.meshes[name].position.copy(vec);
-      if(state.labels[name]) state.labels[name].position.copy(vec).add(new THREE.Vector3(0.08,0.08,0.13));
+      if(state.labels[name]) state.labels[name].position.copy(vec).add(new THREE.Vector3(0.04,0.04,0.065));
       if(isProj || isMid || isEdge) state.meshes[name].material.color.setHex(col);
     }
     // table row
@@ -2187,18 +2259,21 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     if(!tr){
       tr=document.createElement('tr');
       tr.dataset.name=name;
-      tr.innerHTML='<td><strong>'+name+'</strong>'+badge+'</td>'+
+      tr.innerHTML='<td>'+(canEditName?'<input class="point-name-editor" type="text" maxlength="1" value="'+name+'" aria-label="點 '+name+' 的名稱" style="width:30px;font:inherit;font-weight:700;padding:2px;border:1px solid #cbd5e1;border-radius:4px;text-align:center"/>':'<strong>'+name+'</strong>')+badge+'</td>'+
         '<td><input type="number" step="any" value="'+vec.x+'"/></td>'+
         '<td><input type="number" step="any" value="'+vec.y+'"/></td>'+
         '<td><input type="number" step="any" value="'+vec.z+'"/></td>'+
         '<td><button type="button" class="ghost btn-pick-row" data-name="'+name+'" style="padding:2px 6px;font-size:.7rem">選</button></td>';
       tb.appendChild(tr);
-      tr.querySelector('.btn-pick-row').addEventListener('click', function(){ tryPickVertex(name); });
-      tr.querySelectorAll('input').forEach(function(inp){
+      var nameEditor=tr.querySelector('.point-name-editor');
+      if(nameEditor) nameEditor.addEventListener('change', function(){ renameNewPoint(name, nameEditor.value); });
+      var pickBtn=tr.querySelector('.btn-pick-row');
+      pickBtn.addEventListener('click', function(){ tryPickVertex(pickBtn.dataset.name); });
+      tr.querySelectorAll('input[type="number"]').forEach(function(inp){
         inp.addEventListener('input', onVertexInputLive);
       });
     } else {
-      var xs=tr.querySelectorAll('input');
+      var xs=tr.querySelectorAll('input[type="number"]');
       xs[0].value=vec.x; xs[1].value=vec.y; xs[2].value=vec.z;
       // refresh badge if needed
       var td0=tr.querySelector('td');
@@ -2207,8 +2282,42 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       }
     }
   }
+  function renameNewPoint(oldName, proposed){
+    var name=String(proposed||'').trim().toUpperCase();
+    var editor=$('vert-body').querySelector('tr[data-name="'+oldName+'"] .point-name-editor');
+    function restore(){ if(editor) editor.value=oldName; }
+    if(!state.meshes[oldName] || !state.meshes[oldName].userData.userAdded){ restore(); return false; }
+    if(!/^[A-Z]$/.test(name)){ setStatus('新點名稱請用一個英文字母 A–Z。','warn'); restore(); return false; }
+    if(name!==oldName && state.pts[name]){ setStatus('名稱 '+name+' 已使用。','warn'); restore(); return false; }
+    if(name===oldName){ restore(); return true; }
+    state.pts[name]=state.pts[oldName]; delete state.pts[oldName];
+    state.meshes[name]=state.meshes[oldName]; delete state.meshes[oldName];
+    state.labels[name]=state.labels[oldName]; delete state.labels[oldName];
+    state.meshes[name].name='vert:'+name; state.meshes[name].userData.vertexName=name;
+    contentRoot.remove(state.labels[name]); disposeObject3D(state.labels[name]);
+    state.labels[name]=makeLabel(name); state.labels[name].name='label:'+name;
+    state.labels[name].position.copy(state.pts[name]).add(new THREE.Vector3(0.04,0.04,0.065));
+    contentRoot.add(state.labels[name]);
+    function replaceInPairs(list){ (list||[]).forEach(function(pair){ for(var i=0;i<pair.length;i++) if(pair[i]===oldName) pair[i]=name; }); }
+    replaceInPairs(state.solidKeys); replaceInPairs(state.dashKeys); replaceInPairs(state.faceDefs);
+    triangles.forEach(function(t){ ['a','b','c'].forEach(function(k){if(t[k]===oldName)t[k]=name;}); });
+    projections.forEach(function(pr){ if(pr.name===oldName)pr.name=name; if(pr.src===oldName)pr.src=name; replaceInPairs([pr.refs]); });
+    midpoints.forEach(function(mp){ if(mp.name===oldName)mp.name=name; if(mp.a===oldName)mp.a=name; if(mp.b===oldName)mp.b=name; });
+    cutFaces.forEach(function(cf){ if(cf.apex===oldName)cf.apex=name; cf.names=(cf.names||[]).map(function(n){return n===oldName?name:n;}); });
+    angleMeasures.forEach(function(am){ replaceInPairs([am.aRefs,am.bRefs]); });
+    if(currentDemo) currentDemo=currentDemo.map(function(n){return n===oldName?name:n;});
+    if(foldState.basePts && Object.prototype.hasOwnProperty.call(foldState.basePts,oldName)){ foldState.basePts[name]=foldState.basePts[oldName]; delete foldState.basePts[oldName]; }
+    var row=$('vert-body').querySelector('tr[data-name="'+oldName+'"]');
+    if(row){ row.dataset.name=name; row.querySelector('.point-name-editor').value=name; var pickBtn=row.querySelector('.btn-pick-row'); if(pickBtn) pickBtn.dataset.name=name; }
+    refreshEdgeSelect(); refreshFaceSelect(); renderMidList(); renderProjList(); renderCutList();
+    rebuildTriangleMeshes(); renderTriList(); rebuildAuxVisuals(); renderAngleResults();
+    updateSolidTitleOverlay(currentTitle,Object.keys(state.pts).length); forceResizeAndRender();
+    setStatus('已將新點 '+oldName+' 改名為 '+name+'。','ok');
+    return true;
+  }
   function recomputeProjections(updateTable){
     projections.forEach(function(pr){
+      if(pr.manual) return;
       var P=v3(pr.src);
       if(!P) return;
       var foot=null;
@@ -2222,11 +2331,11 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       if(!foot) return;
       state.pts[pr.name]=foot;
       if(state.meshes[pr.name]) state.meshes[pr.name].position.copy(foot);
-      if(state.labels[pr.name]) state.labels[pr.name].position.copy(foot).add(new THREE.Vector3(0.08,0.08,0.13));
+      if(state.labels[pr.name]) state.labels[pr.name].position.copy(foot).add(new THREE.Vector3(0.04,0.04,0.065));
       if(updateTable!==false){
         var tr=$('vert-body').querySelector('tr[data-name="'+pr.name+'"]');
         if(tr){
-          var xs=tr.querySelectorAll('input');
+          var xs=tr.querySelectorAll('input[type="number"]');
           if(xs.length>=3){ xs[0].value=foot.x; xs[1].value=foot.y; xs[2].value=foot.z; }
         }
       }
@@ -2310,16 +2419,17 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
   }
   function recomputeMidpoints(updateTable){
     midpoints.forEach(function(mp){
+      if(mp.manual) return;
       var t=(mp.t==null)?0.5:mp.t;
       var mid=lerpEdgePoint(mp.a, mp.b, t);
       if(!mid) return;
       state.pts[mp.name]=mid;
       if(state.meshes[mp.name]) state.meshes[mp.name].position.copy(mid);
-      if(state.labels[mp.name]) state.labels[mp.name].position.copy(mid).add(new THREE.Vector3(0.08,0.08,0.13));
+      if(state.labels[mp.name]) state.labels[mp.name].position.copy(mid).add(new THREE.Vector3(0.04,0.04,0.065));
       if(updateTable!==false){
         var tr=$('vert-body').querySelector('tr[data-name="'+mp.name+'"]');
         if(tr){
-          var xs=tr.querySelectorAll('input');
+          var xs=tr.querySelectorAll('input[type="number"]');
           if(xs.length>=3){ xs[0].value=mid.x; xs[1].value=mid.y; xs[2].value=mid.z; }
         }
       }
@@ -2343,13 +2453,14 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     var pt=lerpEdgePoint(a,b,t);
     if(!pt) return null;
     var asMid = !!opts.asMid;
-    var nm = asMid ? nextMidpointName() : nextEdgePointName();
+    var nm = pointNameOrAuto(asMid ? nextMidpointName() : nextEdgePointName());
+    if(!nm) return null;
     var tag = asMid ? 'mid' : 'edge';
     upsertVertex(nm, pt, tag);
     if(foldState.active && foldState.basePts){
       foldState.basePts[nm]=[pt.x, pt.y, pt.z];
     }
-    midpoints.push({id:midIdSeq++, name:nm, a:a, b:b, t:t});
+    midpoints.push({id:midIdSeq++, name:nm, a:a, b:b, t:t, asMid:asMid, manual:false});
     renderMidList();
     updatePickSlotsUI();
     bindTableLiveInputs();
@@ -2373,7 +2484,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     }
     midpoints.forEach(function(mp){
       var t=(mp.t==null)?0.5:mp.t;
-      var isMid=mp.name.charAt(0)==='M' && Math.abs(t-0.5)<1e-9;
+      var isMid=!!mp.asMid && Math.abs(t-0.5)<1e-9;
       var div=document.createElement('div');
       div.className='tri-item';
       div.innerHTML='<div class="tri-head"><strong>'+mp.name+'</strong>'+
@@ -2590,16 +2701,19 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     if(d1.lengthSq()<1e-12||d2.lengthSq()<1e-12) return;
     d1.normalize(); d2.normalize();
     var ang=Math.acos(Math.max(-1,Math.min(1, d1.dot(d2))));
-    var rad=0.40;
+    var rad=0.30;
+    var outside=d1.clone().add(d2).negate();
+    if(outside.lengthSq()<1e-10) outside=d1.clone().cross(d2);
+    outside.normalize();
+    var labelPos=vertex.clone().addScaledVector(outside,0.43);
     if(Math.abs(ang - Math.PI/2) < 8*Math.PI/180){
-      // right angle: small square only — no letter label (avoids wrong/covering text)
       makeRightAngleRays(vertex, vertex.clone().add(d1), vertex.clone().add(d2), rad*0.72);
+      if(label) makeAngleSprite(label,labelPos,color||0xdc2626,0.68);
       return;
     }
     var info=makeArcBetweenDirs(vertex, d1, d2, rad, color||0xdc2626, 24);
     if(info && label){
-      // push label farther along bisector so it does not cover the arc
-      makeAngleSprite(label, vertex.clone().addScaledVector(info.midDir, rad*2.15), color||0xdc2626, 0.78);
+      makeAngleSprite(label,labelPos,color||0xdc2626,0.68);
     }
   }
   function sharedEdgeNames(aRefs, bRefs){
@@ -2614,7 +2728,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     // fallback: shortest pair across faces
     return null;
   }
-  /** Textbook dihedral name: ∠A-BD-C when shared edge BD + opposite pts; else ∠(面…,面…) */
+  /** Keep angle labels in three-letter notation. */
   function formatDihedralLabel(aRefs, bRefs){
     aRefs=aRefs||[]; bRefs=bRefs||[];
     var edge=sharedEdgeNames(aRefs, bRefs);
@@ -2623,34 +2737,25 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       var pA=null, pB=null;
       for(var i=0;i<aRefs.length;i++){ if(!eSet[aRefs[i]]){ pA=aRefs[i]; break; } }
       for(var j=0;j<bRefs.length;j++){ if(!eSet[bRefs[j]]){ pB=bRefs[j]; break; } }
-      if(pA && pB) return '∠'+pA+'-'+edge.join('')+'-'+pB;
+      if(pA && pB) return threeLetterAngle([pA,edge[0],pB].concat(aRefs,bRefs));
     }
-    return '∠(面'+aRefs.join('')+',面'+bRefs.join('')+')';
+    return threeLetterAngle((aRefs||[]).concat(bRefs||[]));
   }
-  /** Line–plane: ∠XX-底 if plane ~horizontal; else ∠(線XX,面YYY) */
+  function threeLetterAngle(names){
+    var letters=[], seen={};
+    (names||[]).forEach(function(n){var m=String(n||'').match(/[A-Z]/i);if(m){var c=m[0].toUpperCase();if(!seen[c]){seen[c]=1;letters.push(c);}}});
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').some(function(c){if(!seen[c]){seen[c]=1;letters.push(c);}return letters.length>=3;});
+    return '∠'+letters.slice(0,3).join('');
+  }
+  /** Line-plane angle label in three-letter notation. */
   function formatLinePlaneLabel(aRefs, bRefs){
     aRefs=aRefs||[]; bRefs=bRefs||[];
-    var lineName=aRefs.join('');
-    var A=v3(bRefs[0]), B=v3(bRefs[1]), C=v3(bRefs[2]);
-    var n=(A&&B&&C)?planeNormal(A,B,C):null;
-    if(n && Math.abs(n.z)>0.82) return '∠'+lineName+'-底';
-    // match known base face from faceDefs (first face often 底)
-    var base=null;
-    if(state.faceDefs && state.faceDefs.length){
-      var f0=state.faceDefs[0];
-      if(f0 && f0.length>=3){
-        var s0={}, ok=true;
-        f0.forEach(function(n){ s0[n]=1; });
-        for(var k=0;k<bRefs.length;k++){ if(!s0[bRefs[k]]){ ok=false; break; } }
-        if(ok) base=true;
-      }
-    }
-    if(base) return '∠'+lineName+'-底';
-    return '∠(線'+lineName+',面'+bRefs.join('')+')';
+    var planePoint=(bRefs||[]).filter(function(n){return aRefs.indexOf(n)<0;})[0] || bRefs[0];
+    return threeLetterAngle([aRefs[0],planePoint,aRefs[1]].concat(bRefs,aRefs));
   }
   /** Triangle vertex angle: ∠BAC with vertex letter in the middle */
   function formatVertexAngleLabel(vertexName, nameA, nameB){
-    return '∠'+nameA+vertexName+nameB;
+    return threeLetterAngle([nameA,vertexName,nameB]);
   }
   function markDihedralVisual(aRefs, bRefs, label){
     var A0=v3(aRefs[0]),A1=v3(aRefs[1]),A2=v3(aRefs[2]);
@@ -2688,20 +2793,21 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     var c1=faceCentroid(A0,A1,A2), c2=faceCentroid(B0,B1,B2);
     if(d1.dot(new THREE.Vector3().subVectors(c1, origin))<0) d1.negate();
     if(d2.dot(new THREE.Vector3().subVectors(c2, origin))<0) d2.negate();
-    // highlight shared edge
-    makeSolidSeg(E0, E1, 0x7c3aed);
+    // highlight shared edge, kept fine so the model's own edge remains visible
+    var dihedralEdge=makeSolidSeg(E0, E1, 0x7c3aed);
+    if(dihedralEdge && dihedralEdge.material) dihedralEdge.material.linewidth=1;
     var arcR=0.50;
     var info=makeArcBetweenDirs(origin, d1, d2, arcR, 0xa855f7, 32);
     var lab = formatDihedralLabel(aRefs, bRefs);
-    var labelOff = arcR * 2.05; // farther along bisector — avoid covering wedge
+    var labelOff = arcR * 1.22;
     if(info){
-      makeAngleSprite(lab, origin.clone().addScaledVector(info.midDir, labelOff), 0x7c3aed, 0.95);
+      makeAngleSprite(lab, origin.clone().addScaledVector(info.midDir, labelOff), 0x7c3aed, 0.72);
     } else {
-      makeAngleSprite(lab, origin.clone().addScaledVector(d1.clone().add(d2).normalize(), labelOff), 0x7c3aed, 0.95);
+      makeAngleSprite(lab, origin.clone().addScaledVector(d1.clone().add(d2).normalize(), labelOff), 0x7c3aed, 0.72);
     }
     // soft face edge hints
-    makeSolidSeg(origin, origin.clone().addScaledVector(d1, 0.62), 0x7c3aed);
-    makeSolidSeg(origin, origin.clone().addScaledVector(d2, 0.62), 0xdb2777);
+    makeSolidSeg(origin, origin.clone().addScaledVector(d1, 0.38), 0x7c3aed);
+    makeSolidSeg(origin, origin.clone().addScaledVector(d2, 0.38), 0xdb2777);
     return true;
   }
   function markLinePlaneVisual(aRefs, bRefs, label){
@@ -2727,7 +2833,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       var tangent=new THREE.Vector3().subVectors(B,A).projectOnPlane(n);
       if(tangent.lengthSq()<1e-10) tangent=new THREE.Vector3().subVectors(C,A).projectOnPlane(n);
       if(tangent.lengthSq()>1e-10) makeRightAngleRays(foot, upPt, foot.clone().addScaledVector(tangent.normalize(),0.6), 0.22);
-      makeAngleSprite(lab, foot.clone().addScaledVector(n, 0.62), 0x2563eb, 0.85);
+      makeAngleSprite(lab, foot.clone().addScaledVector(n, 0.42), 0x2563eb, 0.85);
       return true;
     }
     projDir.normalize();
@@ -2735,12 +2841,11 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     // draw projected ray on plane
     makeSolidSeg(foot, foot.clone().addScaledVector(projDir, 0.78), 0x2563eb);
     // arc between line and its plane projection
-    var pivot = upPt.clone().add(foot).multiplyScalar(0.5);
-    var arcR=0.46;
+    var pivot = foot.clone().addScaledVector(n,0.025);
+    var arcR=0.28;
     var info=makeArcBetweenDirs(pivot, lineDir, projDir, arcR, 0x2563eb, 28);
-    var labelOff = arcR * 2.05;
-    if(info) makeAngleSprite(lab, pivot.clone().addScaledVector(info.midDir, labelOff), 0x2563eb, 0.9);
-    else makeAngleSprite(lab, pivot.clone().addScaledVector(lineDir, labelOff), 0x2563eb, 0.9);
+    if(info) makeAngleSprite(lab, pivot.clone().addScaledVector(info.midDir, 0.36), 0x2563eb, 0.78);
+    else makeAngleSprite(lab, pivot.clone().addScaledVector(lineDir, 0.36), 0x2563eb, 0.78);
     return true;
   }
   function markTriangleAngles(tri){
@@ -3732,10 +3837,10 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       v.sub(H0).applyQuaternion(q).add(H0);
       state.pts[n].copy(v);
       if(state.meshes[n]) state.meshes[n].position.copy(v);
-      if(state.labels[n]) state.labels[n].position.copy(v).add(new THREE.Vector3(0.08,0.08,0.13));
+      if(state.labels[n]) state.labels[n].position.copy(v).add(new THREE.Vector3(0.04,0.04,0.065));
       var tr=$('vert-body')&&$('vert-body').querySelector('tr[data-name="'+n+'"]');
       if(tr){
-        var xs=tr.querySelectorAll('input');
+        var xs=tr.querySelectorAll('input[type="number"]');
         if(xs.length>=3){ xs[0].value=v.x; xs[1].value=v.y; xs[2].value=v.z; }
       }
     });
@@ -3763,7 +3868,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     // Vertex spheres / labels
     Object.keys(state.pts).forEach(function(name){
       if(state.meshes[name]) state.meshes[name].position.copy(state.pts[name]);
-      if(state.labels[name]) state.labels[name].position.copy(state.pts[name]).add(new THREE.Vector3(0.08,0.08,0.13));
+      if(state.labels[name]) state.labels[name].position.copy(state.pts[name]).add(new THREE.Vector3(0.04,0.04,0.065));
     });
   }
   function applyAllFolds(){
@@ -3889,7 +3994,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       if(normal&&!edgeNormals[key]) edgeNormals[key]=normal.clone();
       root(key); return key;
     }
-    (state.faceDefs||[]).forEach(function(face){
+    if(!state.disableAutoEqualEdges) (state.faceDefs||[]).forEach(function(face){
       if(!face||face.length!==3) return;
       var names=face, pts=names.map(function(n){return state.pts[n];});
       if(pts.some(function(p){return !p;})) return;
@@ -3947,6 +4052,21 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     (state.equalEdgePairs||[]).forEach(function(pair){ (pair||[]).forEach(drawExplicitEqualEdge); });
 
     // Preset-defined right angles: [vertex, ray endpoint 1, ray endpoint 2].
+    function drawRightAngleOnPlane(mark){
+      if(!mark||mark.length<3) return;
+      var V=v3(mark[0]), A=v3(mark[1]), B=v3(mark[2]);
+      if(!V||!A||!B) return;
+      var d1=A.clone().sub(V), d2=B.clone().sub(V);
+      if(d1.lengthSq()<1e-12||d2.lengthSq()<1e-12) return;
+      var normal=new THREE.Vector3().crossVectors(d1,d2);
+      if(normal.lengthSq()<1e-12) return;
+      var center=V.clone().addScaledVector(d1.clone().normalize(),0.15).addScaledVector(d2.clone().normalize(),0.15);
+      if(state.towerSegment && state.towerSegment[0]===mark[0]){
+        center.addScaledVector(normal.normalize(),0.018);
+      }
+      var tick=0.13;
+      makeRightAngleRays(center, center.clone().addScaledVector(d1.normalize(),tick), center.clone().addScaledVector(d2.normalize(),tick),tick);
+    }
     (state.rightAngles||[]).forEach(function(mark){
       if(!mark||mark.length<3) return;
       var V=v3(mark[0]), A=v3(mark[1]), B=v3(mark[2]);
@@ -3957,6 +4077,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       if(cosine>0.035) return;
       makeRightAngleRays(V,A,B,0.17);
     });
+    (state.planeRightAngles||[]).forEach(drawRightAngleOnPlane);
   }
   function renderProjList(){
     var box=$('proj-list');
@@ -4026,12 +4147,13 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       var div=document.createElement('div');
       div.className='res-item';
       var title;
-      if(am.kind==='dihedral') title=formatDihedralLabel(am.aRefs, am.bRefs)+'（二面角）';
-      else if(am.kind==='linePlane') title=formatLinePlaneLabel(am.aRefs, am.bRefs)+'（線面角）';
-      else if(am.kind==='triAngles') title='△'+am.aRefs.join('')+' 頂角（'+
-        formatVertexAngleLabel(am.aRefs[0], am.aRefs[1], am.aRefs[2])+' '+
-        formatVertexAngleLabel(am.aRefs[1], am.aRefs[0], am.aRefs[2])+' '+
-        formatVertexAngleLabel(am.aRefs[2], am.aRefs[0], am.aRefs[1])+')';
+      if(am.kind==='dihedral') title=formatDihedralLabel(am.aRefs, am.bRefs);
+      else if(am.kind==='linePlane') title=formatLinePlaneLabel(am.aRefs, am.bRefs);
+      else if(am.kind==='triAngles') title=[
+        formatVertexAngleLabel(am.aRefs[0], am.aRefs[1], am.aRefs[2]),
+        formatVertexAngleLabel(am.aRefs[1], am.aRefs[0], am.aRefs[2]),
+        formatVertexAngleLabel(am.aRefs[2], am.aRefs[0], am.aRefs[1])
+      ].join('、');
       else title=am.label||'夾角標示';
       div.innerHTML='<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'+
         '<span>'+title+'</span>'+
@@ -4061,21 +4183,19 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     var rows=$('vert-body').querySelectorAll('tr');
     rows.forEach(function(tr){
       var name=tr.dataset.name;
-      var xs=tr.querySelectorAll('input');
+      var xs=tr.querySelectorAll('input[type="number"]');
       if(!name||xs.length<3) return;
-      // skip overwriting projection feet from manual edit? Allow manual, but next recompute resets — mark non-driven?
-      var isDriven=projections.some(function(pr){return pr.name===name;}) ||
-        midpoints.some(function(mp){return mp.name===name;});
-      if(isDriven) return; // feet / midpoints follow definition
       var x=Number(xs[0].value), y=Number(xs[1].value), z=Number(xs[2].value);
       if(!isFinite(x)||!isFinite(y)||!isFinite(z)) return;
       if(!state.pts[name]) state.pts[name]=new THREE.Vector3();
       state.pts[name].set(x,y,z);
+      projections.forEach(function(pr){if(pr.name===name)pr.manual=true;});
+      midpoints.forEach(function(mp){if(mp.name===name)mp.manual=true;});
     });
     refreshLiveMetrics();
   }
   function bindTableLiveInputs(){
-    $('vert-body').querySelectorAll('input').forEach(function(inp){
+    $('vert-body').querySelectorAll('input[type="number"]').forEach(function(inp){
       inp.removeEventListener('input', onVertexInputLive);
       inp.addEventListener('input', onVertexInputLive);
     });
@@ -4551,7 +4671,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       summary.push('視角＝預設');
     }
 
-    if(key==='tetraABCD' || key==='tetraRightApex' || key==='tetraIsos') model.dashThick = true;
+    if(key==='tetraABCD') model.dashThick = true;
 
     return {
       ok:true,
@@ -4674,7 +4794,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       return '直立角柱，底 ABCD 為直角梯形';
     }
     if(key==='tetraIsos'){
-      return '等腰四面體 ABCD，AD＝BC，P 為 AD 上由 B 所作垂足，AC、AB、BD 長度互不相等';
+      return '等腰四面體 ABCD，AD＝AC＝BC＝BD，P 為 AD 上由 B 所作垂足';
     }
     if(key==='foldNet'){
       return '摺紙網（正方體十字展開），可調摺角';
@@ -5307,6 +5427,14 @@ $('btn-pick-tri').addEventListener('click', function(){
   function syncTFromNum(){ if($('edge-t')&&$('edge-t-num')){ var v=Number($('edge-t-num').value); if(isFinite(v)){ if(v<0.05)v=0.05; if(v>0.95)v=0.95; $('edge-t').value=v; $('edge-t-num').value=v.toFixed(2);} } }
   if($('edge-t')) $('edge-t').addEventListener('input', syncTFromRange);
   if($('edge-t-num')) $('edge-t-num').addEventListener('change', syncTFromNum);
+  if($('btn-move-new-points')) $('btn-move-new-points').addEventListener('click',function(){
+    moveNewPoints=!moveNewPoints;
+    if(moveNewPoints) clearPickMode();
+    this.textContent='拖動新加點：'+(moveNewPoints?'開':'關');
+    this.classList.toggle('active',moveNewPoints);
+    if(controls) controls.enabled=!moveNewPoints;
+    setStatus(moveNewPoints?'已開啟新點拖動模式；拖曳新加點可移動。':'已關閉新點拖動模式。','ok');
+  });
   if($('btn-pick-mid')) $('btn-pick-mid').addEventListener('click', function(){
     if($('edge-select')) $('edge-select').value='';
     setPickMode('mid', 2, $('mid-banner'), '棱上加點：請喺 3D 選兩個端點。');
@@ -5435,7 +5563,8 @@ $('btn-pick-tri').addEventListener('click', function(){
       if(!P||!A||!B||!C){ setStatus('所選頂點或平面點不存在，請重新選取。', 'err'); return; }
       var foot=projectPointToPlane(P,A,B,C);
       if(!foot){ setStatus('所選平面點共線，無法建立垂足；請重新選取。', 'err'); return; }
-      var nm=nextFreeName();
+      var nm=pointNameOrAuto(nextFreeName());
+      if(!nm) return;
       upsertVertex(nm, foot, true);
       projections.push({id:projIdSeq++, name:nm, kind:'plane', src:src, refs:refs, color:0x0369a1});
       rebuildAuxVisuals(); renderProjList(); clearPickMode();
@@ -5448,7 +5577,8 @@ $('btn-pick-tri').addEventListener('click', function(){
       var P2=v3(src2), L0=v3(refs2[0]), L1=v3(refs2[1]);
       var foot2=projectPointToLine(P2,L0,L1);
       if(!foot2){ setStatus('兩點重合，無法定直線。', 'err'); return; }
-      var nm2=nextFreeName();
+      var nm2=pointNameOrAuto(nextFreeName());
+      if(!nm2) return;
       upsertVertex(nm2, foot2, true);
       projections.push({id:projIdSeq++, name:nm2, kind:'line', src:src2, refs:refs2, color:0x0e7490});
       rebuildAuxVisuals(); renderProjList(); clearPickMode();
