@@ -141,8 +141,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
   <h1>立體樣板 3D <span style="font-weight:500;font-size:.88rem;color:#64748b">＋立體三角學</span></h1>
   <p class="sub">
     <span class="warn">對話／聊天室預覽通常無 WebGL，畫面會空白——請用 Chrome／Edge 以 file:// 開啟本檔。</span>
-    <strong>流程：左邊揀立體樣板 → 即時載入 3D → 旋轉／對齊課本視角／三角形／投影／夾角。青點＝面上線段中點；刻線標等長；方框標直角；各面用不同顏色。</strong>
-    唔使上傳圖或打文字描述。
+    <strong>流程：左邊揀立體樣板 → 即時載入 3D → 旋轉／三角形／投影／夾角。只顯示自行加入並命名的中點；刻線標等長；直角方框畫在角的平面上；各面用不同顏色。</strong>
   </p>
 </header>
 <div class="main">
@@ -211,14 +210,8 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       </div>
     </div>
 
-    <h2>② 視角</h2>
-    <div class="btn-row">
-      <button type="button" class="ok" id="btn-align-textbook2">對齊課本視角</button>
-      <button type="button" class="secondary" id="btn-reset-cam">重設視角</button>
-    </div>
-
     <h2>③ 立體三角學 — 畫三角形</h2>
-    <div id="mode-banner" class="mode-banner">提示：按「開始選三點」後，喺 3D 或進階頂點表點選三個頂點。</div>
+    <div id="mode-banner" class="mode-banner">提示：按「開始選三點」後，在 3D 畫面點選三個頂點。</div>
     <div class="tri-pick">
       <span>已選：</span>
       <span class="tri-slot" id="slot0">·</span>
@@ -233,8 +226,24 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     </div>
     <div id="tri-list" class="tri-list"></div>
 
-    <h2>④ 在棱上加點／切面</h2>
-    <p class="note">喺棱上加任意點（參數 t∈(0,1)），自動命名 P／P1…；亦可一鍵加中點 M／M1…。選 ≥4 點可定義切面；切去時所選點圍成的立體會被切去。</p>
+    <h2>④ 投影</h2>
+    <p class="note">把選取的頂點垂直投影到所選平面或直線。新垂足會自動命名，並可加入三角形。</p>
+    <label for="face-select">投影平面（可選）</label>
+    <select id="face-select" class="face-select"><option value="">— 選面或手選三點 —</option></select>
+    <div class="btn-row">
+      <button type="button" id="btn-proj-plane">點→面</button>
+      <button type="button" id="btn-proj-line" class="secondary">點→線</button>
+    </div>
+    <div id="proj-banner" class="mode-banner">選擇平面後按「點→面」，再點要投影的頂點；或不選面並手選三個平面點。</div>
+    <div class="proj-slots" id="proj-slots"></div>
+    <div class="btn-row">
+      <button type="button" id="btn-proj-confirm" class="ok" disabled>建立垂足</button>
+      <button type="button" id="btn-proj-cancel" class="ghost">取消</button>
+    </div>
+    <div id="proj-list" class="tri-list"></div>
+
+    <h2>⑤ 在棱上加點／切面</h2>
+    <p class="note">在棱上加任意點會自動命名 P／P1…；按「加中點」才加入並命名 M／M1…。選 ≥4 點可定義切面；切去時所選點圍成的立體會被切去。</p>
     <label for="edge-select">現有棱</label>
     <select id="edge-select" class="face-select"><option value="">— 揀一條棱，或用下方選兩點 —</option></select>
     <label for="edge-t">棱上比例 t（0＝端點A，1＝端點B；預設 0.5 中點）</label>
@@ -243,7 +252,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       <input type="number" id="edge-t-num" min="0.05" max="0.95" step="0.01" value="0.5" style="width:64px;font:inherit;font-size:.78rem;padding:4px 6px;border:1px solid var(--border);border-radius:6px"/>
     </div>
     <div class="mid-slots" id="mid-slots"></div>
-    <div id="mid-banner" class="mode-banner">可下拉揀棱並調 t，或按「選兩點」喺 3D／頂點表選棱兩端。</div>
+    <div id="mid-banner" class="mode-banner">可下拉揀棱並調 t，或按「選兩點」在 3D 畫面選棱兩端。</div>
     <div class="btn-row">
       <button type="button" id="btn-pick-mid" class="secondary">開始選兩點</button>
       <button type="button" id="btn-add-edge-pt" class="ok" disabled>在棱上加點</button>
@@ -262,7 +271,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     <div id="cut-banner" class="mode-banner">按「選 ≥4 點做切面」後揀至少 4 個點（可繼續加至 12）。</div>
     <div id="cut-list" class="tri-list"></div>
 
-    <h2>④b 摺紙</h2>
+    <h2>⑤b 摺紙</h2>
     <p class="note">先喺樣板「摺紙」揀平面圖形或摺紙網。平面底可加 <strong>1–2 條摺痕</strong>（揀邊界／現有頂點兩端）；非固定側繞摺痕旋轉，角度 0–180°。底區自動固定。</p>
     <label for="fold-crease">摺痕（預設／已加）</label>
     <select id="fold-crease" class="face-select"><option value="">— 載入摺紙後顯示 —</option></select>
@@ -287,23 +296,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     </div>
     <div id="fold-banner" class="mode-banner">請先喺樣板目錄揀摺紙平面圖形或「摺紙網」。</div>
 
-    <h2>⑤ 加投影點</h2>
-    <p class="note">將點垂直投影到平面或直線；垂足 H 可再選入三角形（常見直角三角形）。</p>
-    <label for="face-select">已知面（點→面時可直接選）</label>
-    <select id="face-select" class="face-select"><option value="">— 選面或改用手選三點 —</option></select>
-    <div class="btn-row">
-      <button type="button" id="btn-proj-plane">加投影點（點→面）</button>
-      <button type="button" id="btn-proj-line" class="secondary">加投影點（點→線）</button>
-    </div>
-    <div id="proj-banner" class="mode-banner">按上方按鈕後，喺 3D／頂點表選點。</div>
-    <div class="proj-slots" id="proj-slots"></div>
-    <div class="btn-row">
-      <button type="button" id="btn-proj-confirm" class="ok" disabled>建立垂足</button>
-      <button type="button" id="btn-proj-cancel" class="ghost">取消</button>
-      <button type="button" id="btn-proj-demo" class="secondary">投影＋夾角示範</button>
-    </div>
-    <div id="proj-list" class="tri-list"></div>
-
     <h2>⑥ 標示夾角</h2>
     <p class="ang-note">唔使計度數——只需喺 3D 上<strong>視覺標示</strong>：圓弧、直角方塊、色楔、∠ABC 標籤。加入後一定畫喺模型上（唔依賴結果面板）。</p>
     <p class="note">面與面（二面角）／線與面／三角形頂角。可揀已知面快速標示。</p>
@@ -324,12 +316,11 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     <div class="ang-slots" id="ang-slots"></div>
     <div class="btn-row">
       <button type="button" id="btn-angle-confirm" class="ok" disabled>標示夾角</button>
-      <button type="button" id="btn-angle-demo" class="secondary">夾角標示示範</button>
     </div>
     <div id="angle-results" class="results-panel"><p class="note" style="margin:0">尚未標示夾角。標示後 3D 會顯示弧／楔／∠標籤。</p></div>
 
-    <details class="adv-panel" id="adv-panel">
-      <summary>進階（頂點表／上傳認圖／文字描述）</summary>
+    <details class="adv-panel" id="adv-panel" hidden aria-hidden="true">
+      <summary>內部資料</summary>
       <p class="note">日常課堂請用上方樣板目錄。以下為可選微調與舊認圖流程，預設收合。</p>
 
       <h2 style="border-top:none;padding-top:0;margin-top:8px">頂點／棱微調</h2>
@@ -518,8 +509,8 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       <strong>用法摘要</strong><br/>
       1) 左邊<strong>揀立體樣板</strong>→即時載入 3D。<br/>
       2) 滑鼠拖曳旋轉、滾輪縮放；「對齊課本視角」。<br/>
-      3) 三角形／棱上加點／切面（≥4點）／投影／夾角／摺紙平面摺痕。青點標各面線段中點；等腰／等邊用刻線標示。<br/>
-      4) 「進階」可選：頂點表微調、上傳認圖、文字描述。<br/>
+      3) 三角形／投影／棱上加點／切面（≥4點）／摺紙平面摺痕／夾角。<br/>
+      4) 中點由「加中點」建立，並以 M、M1 等點名顯示；等腰／等邊用刻線標示。<br/>
       座標：Z 向上。詳見 使用說明.txt。
     </p>
   </aside>
@@ -932,7 +923,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
   var FACE_COLORS = [0xfde68a,0xa5b4fc,0x93c5fd,0x86efac,0xf9a8d4,0xfcd34d,0x67e8f9,0xd8b4fe];
   Object.keys(PRESETS).forEach(function(key){
     if((PRESETS[key].faces||[]).length>1) PRESETS[key].distinctFaceColors=true;
-    if(!PRESETS[key].fold) PRESETS[key].autoMidpoints=true;
   });
   var TRI_COLORS = [0xdc2626, 0x2563eb, 0x16a34a, 0xd97706, 0x7c3aed, 0xdb2777];
 
@@ -943,7 +933,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     var el = $('analyze-status');
     el.textContent = msg;
     el.className = 'status-box' + (kind ? ' ' + kind : '');
-    try{ el.scrollIntoView({block:'nearest', behavior:'smooth'}); }catch(e){}
   }
   function safeFileName(name){
     try{ return String(name||'圖片'); }catch(e){ return '圖片'; }
@@ -1475,7 +1464,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
 
   var wrap=$('canvas-wrap');
   var scene, camera, renderer, controls, contentRoot, labelRoot, triRoot, auxRoot;
-  var state={ pts:{}, meshes:{}, labels:{}, solidLines:[], dashLines:[], faceMeshes:[], solidKeys:[], dashKeys:[], faceDefs:[], rightAngles:[], faceColors:null, distinctFaceColors:false, autoMidpoints:false };
+  var state={ pts:{}, meshes:{}, labels:{}, solidLines:[], dashLines:[], faceMeshes:[], solidKeys:[], dashKeys:[], faceDefs:[], rightAngles:[], faceColors:null, distinctFaceColors:false };
 
   function initThree(){
     if(typeof THREE==='undefined'){
@@ -1722,7 +1711,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     state.rightAngles = model.rightAngles || [];
     state.faceColors = model.faceColors || null;
     state.distinctFaceColors = !!model.distinctFaceColors;
-    state.autoMidpoints = !!model.autoMidpoints;
     state.faceTint = (model.faceTint!=null) ? model.faceTint : null;
     state.faceOpacity = (model.faceOpacity!=null) ? model.faceOpacity : 0.28;
 
@@ -2036,6 +2024,17 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     var AP=new THREE.Vector3().subVectors(P,A);
     var dist=AP.dot(n);
     return new THREE.Vector3().copy(P).addScaledVector(n, -dist);
+  }
+  function planeRefsForFace(face){
+    if(!face||face.length<3) return null;
+    var best=null, bestArea=0;
+    for(var i=0;i<face.length-2;i++) for(var j=i+1;j<face.length-1;j++) for(var k=j+1;k<face.length;k++){
+      var A=v3(face[i]), B=v3(face[j]), C=v3(face[k]);
+      if(!A||!B||!C) continue;
+      var area=new THREE.Vector3().crossVectors(B.clone().sub(A),C.clone().sub(A)).lengthSq();
+      if(area>bestArea){ bestArea=area; best=[face[i],face[j],face[k]]; }
+    }
+    return bestArea>1e-12?best:null;
   }
   function projectPointToLine(P, A, B){
     var AB=new THREE.Vector3().subVectors(B,A);
@@ -2459,6 +2458,27 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       auxRoot.add(mesh);
     }catch(e){}
   }
+  function makeRightAngleRays(vertex, rayA, rayB, size){
+    if(!vertex||!rayA||!rayB) return;
+    var d1=new THREE.Vector3().subVectors(rayA,vertex), d2=new THREE.Vector3().subVectors(rayB,vertex);
+    var l1=d1.length(), l2=d2.length();
+    if(l1<1e-8||l2<1e-8) return;
+    d1.multiplyScalar(1/l1); d2.multiplyScalar(1/l2);
+    var s=Math.min(size||0.18,l1*0.32,l2*0.32);
+    var a=vertex.clone().addScaledVector(d1,s), c=vertex.clone().addScaledVector(d2,s);
+    var b=a.clone().addScaledVector(d2,s);
+    makeSolidSeg(a,b,0xf59e0b);
+    makeSolidSeg(b,c,0xf59e0b);
+    try{
+      var geo=new THREE.BufferGeometry();
+      geo.setAttribute('position',new THREE.BufferAttribute(new Float32Array([
+        vertex.x,vertex.y,vertex.z,a.x,a.y,a.z,b.x,b.y,b.z,
+        vertex.x,vertex.y,vertex.z,b.x,b.y,b.z,c.x,c.y,c.z
+      ]),3));
+      var mesh=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:0xfbbf24,transparent:true,opacity:0.45,side:THREE.DoubleSide,depthWrite:false}));
+      mesh.renderOrder=12; auxRoot.add(mesh);
+    }catch(e){}
+  }
   function makeArcBetweenDirs(origin, dirA, dirB, radius, color, segments){
     dirA=dirA.clone().normalize(); dirB=dirB.clone().normalize();
     radius=radius||0.35;
@@ -2520,8 +2540,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     var rad=0.40;
     if(Math.abs(ang - Math.PI/2) < 8*Math.PI/180){
       // right angle: small square only — no letter label (avoids wrong/covering text)
-      var n=new THREE.Vector3().crossVectors(d1,d2).normalize();
-      makeRightAngleMark(vertex, vertex.clone().add(d1), n, rad*0.72);
+      makeRightAngleRays(vertex, vertex.clone().add(d1), vertex.clone().add(d2), rad*0.72);
       return;
     }
     var info=makeArcBetweenDirs(vertex, d1, d2, rad, color||0xdc2626, 24);
@@ -2646,19 +2665,20 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     var foot=projectPointToPlane(upPt, A,B,C);
     if(!foot) return false;
     makeDashSeg(upPt, foot, 0x0369a1);
-    // right-angle square at foot — no letter
-    makeRightAngleMark(foot, upPt, n, 0.22);
     var lineDir=new THREE.Vector3().subVectors(L1,L0).normalize();
     // ensure lineDir points away from plane along up side
     if(lineDir.dot(n) * (new THREE.Vector3().subVectors(upPt,A).dot(n)) < 0) lineDir.negate();
     var projDir=lineDir.clone().sub(n.clone().multiplyScalar(lineDir.dot(n)));
     var lab=formatLinePlaneLabel(aRefs, bRefs);
     if(projDir.lengthSq()<1e-10){
-      // line perp to plane — square already drawn; place name farther along normal
+      var tangent=new THREE.Vector3().subVectors(B,A).projectOnPlane(n);
+      if(tangent.lengthSq()<1e-10) tangent=new THREE.Vector3().subVectors(C,A).projectOnPlane(n);
+      if(tangent.lengthSq()>1e-10) makeRightAngleRays(foot, upPt, foot.clone().addScaledVector(tangent.normalize(),0.6), 0.22);
       makeAngleSprite(lab, foot.clone().addScaledVector(n, 0.62), 0x2563eb, 0.85);
       return true;
     }
     projDir.normalize();
+    makeRightAngleRays(foot, upPt, foot.clone().addScaledVector(projDir,0.6), 0.22);
     // draw projected ray on plane
     makeSolidSeg(foot, foot.clone().addScaledVector(projDir, 0.78), 0x2563eb);
     // arc between line and its plane projection
@@ -3754,12 +3774,15 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       if(pr.kind==='plane'){
         var A=v3(pr.refs[0]), B=v3(pr.refs[1]), C=v3(pr.refs[2]);
         var n=A&&B&&C?planeNormal(A,B,C):null;
-        if(n) makeRightAngleMark(H, P, n, 0.2);
+        if(n){
+          var tangent=B.clone().sub(A).projectOnPlane(n);
+          if(tangent.lengthSq()>1e-10) makeRightAngleRays(H,P,H.clone().addScaledVector(tangent.normalize(),0.55),0.2);
+        }
       } else if(pr.kind==='line'){
         var L0=v3(pr.refs[0]), L1=v3(pr.refs[1]);
         if(L0&&L1){
-          var dir=new THREE.Vector3().subVectors(L1,L0).normalize();
-          makeRightAngleMark(H, P, dir, 0.2);
+          var edgePt=H.distanceTo(L0)>=H.distanceTo(L1)?L0:L1;
+          makeRightAngleRays(H,P,edgePt,0.2);
         }
       }
     });
@@ -3804,22 +3827,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     function faceHasEdge(a,b){
       return (state.faceDefs||[]).some(function(face){ return face && face.indexOf(a)>=0 && face.indexOf(b)>=0; });
     }
-    if(state.autoMidpoints){
-      (state.solidKeys||[]).concat(state.dashKeys||[]).forEach(function(edge){
-        if(!edge||edge.length<2||!state.pts[edge[0]]||!state.pts[edge[1]]||!faceHasEdge(edge[0],edge[1])) return;
-        var key=edgeKey(edge[0],edge[1]);
-        if(seen[key]) return;
-        seen[key]=1; lines.push(edge);
-      });
-      lines.forEach(function(edge){
-        var p=state.pts[edge[0]].clone().add(state.pts[edge[1]]).multiplyScalar(0.5);
-        var halo=new THREE.Mesh(new THREE.SphereGeometry(0.075,12,8), new THREE.MeshBasicMaterial({color:0xffffff,depthWrite:false}));
-        halo.position.copy(p); halo.renderOrder=12; halo.userData.autoMidpoint=true; auxRoot.add(halo);
-        var dot=new THREE.Mesh(new THREE.SphereGeometry(0.046,12,8), new THREE.MeshBasicMaterial({color:0x0891b2,depthWrite:false}));
-        dot.position.copy(p); dot.renderOrder=13; dot.userData.autoMidpoint=true; dot.userData.edge=edge.slice(); auxRoot.add(dot);
-      });
-    }
-
     // Mark equal sides of isosceles/equilateral triangular faces with the usual tick notation.
     var parent={}, edgeRefs={}, edgeNormals={};
     function root(k){ parent[k]=parent[k]||k; if(parent[k]!==k) parent[k]=root(parent[k]); return parent[k]; }
@@ -3873,8 +3880,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
       if(d1.lengthSq()<1e-12||d2.lengthSq()<1e-12) return;
       var cosine=Math.abs(d1.normalize().dot(d2.normalize()));
       if(cosine>0.035) return;
-      var normal=new THREE.Vector3().crossVectors(d1,d2).normalize();
-      makeRightAngleMark(V,A,normal,0.17);
+      makeRightAngleRays(V,A,B,0.17);
     });
   }
   function renderProjList(){
@@ -3882,7 +3888,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     if(!box) return;
     box.innerHTML='';
     if(!projections.length){
-      box.innerHTML='<p class="note">尚未建立投影點。可按「投影＋夾角示範」。</p>';
+      box.innerHTML='<p class="note">尚未建立投影點。選擇平面後按「點→面」，再選投影頂點。</p>';
       return;
     }
     projections.forEach(function(pr){
@@ -4020,7 +4026,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     updateMidAddEnabled();
     if($('proj-banner')){ $('proj-banner').className='mode-banner'; $('proj-banner').textContent='按上方按鈕後，喺 3D／左表選點。'; }
     if($('angle-banner')){ $('angle-banner').className='mode-banner'; $('angle-banner').textContent='按按鈕後依提示選兩個面，或選一條線＋一個面。'; }
-    if($('mid-banner')){ $('mid-banner').className='mode-banner'; $('mid-banner').textContent='可下拉揀棱並調 t，或按「開始選兩點」喺 3D／頂點表選兩點。'; }
+    if($('mid-banner')){ $('mid-banner').className='mode-banner'; $('mid-banner').textContent='可下拉揀棱並調 t，或按「開始選兩點」在 3D 畫面選兩點。'; }
     if($('cut-banner')){ $('cut-banner').className='mode-banner'; $('cut-banner').textContent='按「選 ≥4 點做切面」後揀至少 4 個點（可繼續加至 12）。'; }
   }
   function updateGuidedPickUI(){
@@ -4131,7 +4137,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     // auto advance banners
     if(pickKind==='projPlane'){
       var left=pickExpect-pickBuf.length;
-      $('proj-banner').textContent=left?('點→面：再選 '+left+' 個點（面用三點；或先喺下拉選面再只選點 P）'):'已選齊，按「建立垂足」。';
+      $('proj-banner').textContent=left?('點→面：再選 '+left+' 個點'):'已選齊，按「建立垂足」。';
     } else if(pickKind==='projLine'){
       var left2=pickExpect-pickBuf.length;
       $('proj-banner').textContent=left2?('點→線：再選 '+left2+' 個點'):'已選齊，按「建立垂足」。';
@@ -4666,7 +4672,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
 
     setDescPending(!!awaitConfirm);
     pendingRecognize = result;
-    try{ if($('text-desc-panel')) $('text-desc-panel').scrollIntoView({block:'nearest', behavior:'smooth'}); }catch(e){}
     return desc;
   }
 
@@ -4905,8 +4910,8 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
   if($('fp-fold-rect')) $('fp-fold-rect').addEventListener('click', function(){ pickPresetFromFail('foldRect'); });
   $('btn-generate').addEventListener('click', generateFromTable);
   function resetCam(){ fitCamera(state.camView ? {textbook:true} : null); hud('已重設視角'); }
-  $('btn-reset-cam').addEventListener('click', resetCam);
-  $('btn-reset-cam2').addEventListener('click', resetCam);
+  if($('btn-reset-cam')) $('btn-reset-cam').addEventListener('click', resetCam);
+  if($('btn-reset-cam2')) $('btn-reset-cam2').addEventListener('click', resetCam);
   function onAlignTextbook(){
     alignTextbookView();
     setStatus('已對齊課本視角（較低平、近樣本線稿）。可再拖曳微調。', 'ok');
@@ -4938,7 +4943,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     try{ clearAux(); }catch(e){}
     triangles=[];
     try{ clearTrianglesSceneOnly(); }catch(e){}
-    setStatus('正在更新頂點表並生成 3D…', 'ok');
+    setStatus('正在更新立體並生成 3D…', 'ok');
     try{ fillTable(result.model); }catch(fillErr){
       result=fallbackDemoModel('填表失敗：'+fillErr.message);
       fillTable(result.model);
@@ -5219,7 +5224,7 @@ $('btn-pick-tri').addEventListener('click', function(){
   if($('edge-t-num')) $('edge-t-num').addEventListener('change', syncTFromNum);
   if($('btn-pick-mid')) $('btn-pick-mid').addEventListener('click', function(){
     if($('edge-select')) $('edge-select').value='';
-    setPickMode('mid', 2, $('mid-banner'), '棱上加點：請喺 3D 或頂點表選兩個端點。');
+    setPickMode('mid', 2, $('mid-banner'), '棱上加點：請喺 3D 選兩個端點。');
     hud('選兩點加棱上點');
   });
   if($('btn-mid-cancel')) $('btn-mid-cancel').addEventListener('click', function(){
@@ -5311,18 +5316,18 @@ $('btn-pick-tri').addEventListener('click', function(){
   // ----- projection UI -----
   function startProjPlane(){
     var fi=$('face-select').value;
-    if(fi!==''){
+    if(fi!=='' && state.faceDefs[Number(fi)]){
       // only need to pick the source point P
-      setPickMode('projPlane', 1, $('proj-banner'), '點→面：已選面 '+state.faceDefs[Number(fi)].join('')+'，請選要投影嘅點 P。');
+      setPickMode('projPlane', 1, $('proj-banner'), '點→面：已選面 '+state.faceDefs[Number(fi)].join('')+'，請點要投影的頂點。');
       // stash face index on expect special: use pickExpect=1 and read face on confirm
       pickBuf._faceIdx=Number(fi);
     } else {
-      setPickMode('projPlane', 4, $('proj-banner'), '點→面：先選點 P，再選平面上三點（或改用上方「已知面」下拉）。');
+      setPickMode('projPlane', 4, $('proj-banner'), '點→面：依次點選投影頂點及平面上三點。');
       pickBuf._faceIdx=undefined;
     }
   }
   function startProjLine(){
-    setPickMode('projLine', 3, $('proj-banner'), '點→線：先選點 P，再選直線兩端點。');
+    setPickMode('projLine', 3, $('proj-banner'), '點→線：依次點選投影頂點及直線兩端點。');
   }
   $('btn-proj-plane').addEventListener('click', startProjPlane);
   $('btn-proj-line').addEventListener('click', startProjLine);
@@ -5336,19 +5341,21 @@ $('btn-pick-tri').addEventListener('click', function(){
       if(pickBuf._faceIdx!=null && pickBuf.length>=1){
         src=pickBuf[0];
         var face=state.faceDefs[pickBuf._faceIdx];
-        refs=[face[0],face[1],face[2]];
+        refs=planeRefsForFace(face);
+        if(!refs){ setStatus('所選面沒有足夠的非共線頂點，無法建立垂足。', 'err'); return; }
       } else if(pickBuf.length>=4){
         src=pickBuf[0]; refs=pickBuf.slice(1,4);
       } else return;
       var P=v3(src), A=v3(refs[0]), B=v3(refs[1]), C=v3(refs[2]);
+      if(!P||!A||!B||!C){ setStatus('所選頂點或平面點不存在，請重新選取。', 'err'); return; }
       var foot=projectPointToPlane(P,A,B,C);
-      if(!foot){ setStatus('三點共線，無法定平面。', 'err'); return; }
+      if(!foot){ setStatus('所選平面點共線，無法建立垂足；請重新選取。', 'err'); return; }
       var nm=nextFreeName();
       upsertVertex(nm, foot, true);
       projections.push({id:projIdSeq++, name:nm, kind:'plane', src:src, refs:refs, color:0x0369a1});
       rebuildAuxVisuals(); renderProjList(); clearPickMode();
       hud('已建立垂足 '+nm+'（'+src+'→面 '+refs.join('')+'）');
-      setStatus('垂足 '+nm+' 已加入頂點表，可選入三角形。', 'ok');
+      setStatus('已建立垂足 '+nm+'，可選入三角形。', 'ok');
       bindTableLiveInputs();
     } else if(pickKind==='projLine'){
       if(pickBuf.length<3) return;
@@ -5361,7 +5368,7 @@ $('btn-pick-tri').addEventListener('click', function(){
       projections.push({id:projIdSeq++, name:nm2, kind:'line', src:src2, refs:refs2, color:0x0e7490});
       rebuildAuxVisuals(); renderProjList(); clearPickMode();
       hud('已建立垂足 '+nm2+'（'+src2+'→線 '+refs2.join('')+'）');
-      setStatus('垂足 '+nm2+' 已加入頂點表，可選入三角形。', 'ok');
+      setStatus('已建立垂足 '+nm2+'，可選入三角形。', 'ok');
       bindTableLiveInputs();
     }
   });
@@ -5502,65 +5509,6 @@ $('btn-pick-tri').addEventListener('click', function(){
   }
   bindAngFaceQuick();
 
-  // ----- demo: cube projection + right triangle + line-plane angle -----
-  $('btn-proj-demo').addEventListener('click', function(){
-    applyPreset('cube', false);
-    // Project F onto plane ACG → foot P at (0,0,2); △FPG right-angled at P
-    var foot=projectPointToPlane(v3('F'), v3('A'), v3('C'), v3('G'));
-    var nm=nextFreeName(); // should be P
-    upsertVertex(nm, foot, true);
-    projections.push({id:projIdSeq++, name:nm, kind:'plane', src:'F', refs:['A','C','G'], color:0x0369a1});
-    addTriangle('F', nm, 'G');
-    pushAngleMark({
-      id:angIdSeq++, kind:'triAngles',
-      aRefs:['F', nm, 'G'], bRefs:[], color:0xdc2626,
-      label:'∠F'+nm+'G 頂角'
-    });
-    // line AG with bottom face ABCD
-    pushAngleMark({
-      id:angIdSeq++, kind:'linePlane',
-      aRefs:['A','G'], bRefs:['A','B','C'],
-      label:formatLinePlaneLabel(['A','G'], ['A','B','C'])
-    });
-    // dihedral between front ABFE and side ADHE (90°)
-    pushAngleMark({
-      id:angIdSeq++, kind:'dihedral',
-      aRefs:['A','B','F'], bRefs:['A','D','H'],
-      label:formatDihedralLabel(['A','B','F'], ['A','D','H'])
-    });
-    renderProjList();
-    bindTableLiveInputs();
-    setStatus('示範：正方體上，F 投影到面 ACG 得垂足 '+nm+'；直角△F'+nm+'G 頂角標示；線 AG 與底面夾角弧；面 ABF 與面 ADH 二面角楔。', 'ok');
-    hud('投影＋夾角示範已載入（3D 已標示）');
-  });
-
-  if($('btn-angle-demo')){
-    $('btn-angle-demo').addEventListener('click', function(){
-      applyPreset('tetraABCD', false);
-      // triangle angles on DBC (marks only — no red fill overlay)
-      pushAngleMark({
-        id:angIdSeq++, kind:'triAngles',
-        aRefs:['D','B','C'], bRefs:[], color:0xdc2626,
-        label:'∠DBC 頂角'
-      });
-      // dihedral ABD / CBD along BD → textbook ∠A-BD-C
-      pushAngleMark({
-        id:angIdSeq++, kind:'dihedral',
-        aRefs:['A','B','D'], bRefs:['C','B','D'],
-        label:formatDihedralLabel(['A','B','D'], ['C','B','D'])
-      });
-      // line DA to base ABC → ∠DA-底
-      pushAngleMark({
-        id:angIdSeq++, kind:'linePlane',
-        aRefs:['D','A'], bRefs:['A','B','C'],
-        label:formatLinePlaneLabel(['D','A'], ['A','B','C'])
-      });
-      alignTextbookView();
-      setStatus('夾角標示示範：四面體上已標示 △DBC 頂角、二面角 ABD/CBD、線 DA 與底面 ABC。只需睇 3D 標記。', 'ok');
-      hud('夾角標示示範 · 四面體');
-    });
-  }
-
   // boot
   loadApiPrefs();
   try{
@@ -5618,9 +5566,6 @@ $('btn-pick-tri').addEventListener('click', function(){
       rebuildAuxVisuals: rebuildAuxVisuals,
       getAngleCount: function(){ return angleMeasures.length; },
       getAuxCount: function(){ return auxRoot ? auxRoot.children.length : 0; },
-      markDemoAngles: function(){
-        if($('btn-angle-demo')) $('btn-angle-demo').click();
-      }
     };
   }catch(e){}
   if(!initThree()) return;
