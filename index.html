@@ -21,7 +21,7 @@ header h1{margin:0;flex:0 0 auto;font-size:1.08rem;white-space:nowrap;cursor:hel
 header h1 span{font-weight:500;font-size:.84rem;color:#64748b}
 .sub{margin:0;min-width:0;color:var(--muted);font-size:.60rem;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .warn{color:var(--warn);font-weight:600}
-.main{flex:1;display:grid;grid-template-columns:minmax(320px,35vw) minmax(350px,1fr) minmax(230px,23vw);gap:8px;min-height:0;padding:8px}
+.main{flex:1;display:grid;grid-template-columns:minmax(260px,20vw) minmax(400px,1fr) minmax(210px,15vw);gap:8px;min-height:0;padding:8px}
 .sidebar{background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:auto;padding:9px 10px 14px;display:flex;flex-direction:column;gap:7px;min-width:0}
 .sidebar>*{flex-shrink:0}
 .sidebar h2{margin:10px 0 0;font-size:.92rem;color:#334155;border-top:1px solid var(--border);padding-top:10px}
@@ -110,10 +110,15 @@ details.adv-panel[open]>summary{margin-bottom:10px;color:#1e3a8a}
 .tool-pane{min-width:0;overflow:auto;padding:8px 2px 2px}
 .tool-pane h2{font-size:.84rem;margin:2px 0 6px;padding-top:0;border-top:0}
 #bottom-tools{flex:0 0 auto;margin:0 8px 8px;padding:8px 10px 10px;background:#fff;border:1px solid var(--border);border-radius:10px}
-#bottom-tools{height:270px;min-height:110px;display:flex;flex-direction:column}
-#bottom-tool-content{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:start;gap:8px;min-height:0;flex:1;overflow:hidden}
-#bottom-tool-content .tool-pane{display:block!important;min-height:0;max-height:100%;overflow:auto;padding:5px;border:1px solid #e2e8f0;border-radius:8px;background:#fff}
-#bottom-tool-content .tool-pane[hidden]{display:block!important}
+#bottom-tools{height:25vh;min-height:160px;max-height:45vh;display:flex;flex-direction:column}
+#bottom-tool-content{display:block;min-height:0;flex:1;overflow:hidden}
+#bottom-tool-content .tool-pane{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));align-content:start;gap:6px;min-height:0;max-height:100%;overflow:auto;padding:7px;border:1px solid #e2e8f0;border-radius:8px;background:#fff}
+#bottom-tool-content .tool-pane[hidden]{display:none!important}
+#bottom-tool-content .tool-pane>*{min-width:0}
+#bottom-tool-content .tool-pane>h2,#bottom-tool-content .tool-pane>p.note,#bottom-tool-content .tool-pane>.ang-note,#bottom-tool-content .tool-pane>.mode-banner,#bottom-tool-content .tool-pane>.tri-list,#bottom-tool-content .tool-pane>.tri-pick,#bottom-tool-content .tool-pane>.proj-slots,#bottom-tool-content .tool-pane>.mid-slots,#bottom-tool-content .tool-pane>.results-panel,#bottom-tool-content .tool-pane>#angle-results{grid-column:1/-1}
+#bottom-tool-content .tool-pane>.btn-row{grid-column:1/-1;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));align-items:center;gap:5px}
+#bottom-tool-content .tool-pane>.btn-row>*{min-width:0;max-width:100%}
+#bottom-tool-content .tool-pane>select,#bottom-tool-content .tool-pane>input{min-width:0;max-width:100%}
 #right-tool-content{min-height:0;flex:1;overflow:auto}
 .help{display:none!important}
 .main{column-gap:0}
@@ -138,10 +143,10 @@ details.adv-panel[open]>summary{margin-bottom:10px;color:#1e3a8a}
 #bottom-tools.collapsed #bottom-tool-content{display:none}
 .bottom-tool-head{height:30px;margin-bottom:5px}
 .bottom-tool-head>strong{flex:1;color:#334155;font-size:.86rem}
-.bottom-tool-head .tool-tabs{display:none}
+.bottom-tool-head .tool-tabs{display:flex;flex:1;min-width:0}
 #bottom-tools.collapsed .bottom-tool-head{margin:0;height:30px}
-@media(max-width:950px){.resize-splitter,#bottom-splitter{display:none!important}.main{column-gap:7px!important}#bottom-tool-content{grid-template-columns:repeat(3,minmax(210px,1fr));overflow:auto}#bottom-tool-content .tool-pane{max-height:none;overflow:visible}#bottom-tools{height:310px;overflow:hidden}}
-@media(max-width:1120px){.main{grid-template-columns:minmax(320px,35vw) minmax(320px,1fr) minmax(220px,23vw);gap:6px;padding:6px}.preset-cards{gap:4px}.preset-card{padding:5px 6px}.preset-card .pc-title{font-size:.72rem}.preset-card .pc-sub{font-size:.56rem}}
+@media(max-width:950px){.resize-splitter,#bottom-splitter{display:none!important}.main{column-gap:7px!important}#bottom-tool-content .tool-pane{max-height:none;overflow:auto}#bottom-tools{height:34vh;min-height:220px;max-height:46vh;overflow:hidden}}
+@media(max-width:1120px){.main{grid-template-columns:minmax(260px,20vw) minmax(320px,1fr) minmax(210px,15vw);gap:6px;padding:6px}.preset-cards{gap:4px}.preset-card{padding:5px 6px}.preset-card .pc-title{font-size:.72rem}.preset-card .pc-sub{font-size:.56rem}}
 @media(max-width:950px){
   header{padding:7px 10px}.header-line{align-items:flex-start;flex-wrap:wrap;gap:3px 10px;white-space:normal;overflow:visible}header h1{font-size:1rem}.sub{flex:1 1 100%;font-size:.65rem;white-space:normal;overflow:visible;text-overflow:clip}
   .main{flex:0 0 auto;grid-template-columns:1fr;grid-template-rows:minmax(220px,34vh) minmax(340px,54vh) auto;gap:7px;padding:7px}
@@ -232,7 +237,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
         <div class="preset-cards">
           <button type="button" class="preset-card" data-preset="tetraABCD" id="btn-tetra"><span class="pc-title">四面體（邊不相等）</span><span class="pc-sub">D–ABC · AC 虛線 · 淡綠</span></button>
           <button type="button" class="preset-card" data-preset="tetraRightApex" id="btn-tetra-right"><span class="pc-title">直角頂四面體</span><span class="pc-sub">OABC · CM⊥AB</span></button>
-          <button type="button" class="preset-card" data-preset="tetraIsos" id="btn-tetra-isos"><span class="pc-title">等腰四面體</span><span class="pc-sub">AD = AC = BC = BD · BP⊥AD</span></button>
         </div>
       </div>
       <div class="preset-group">
@@ -427,7 +431,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
           <div class="btn-row">
             <button type="button" id="fp-tetra" class="ok">四面體 D–ABC</button>
             <button type="button" id="fp-tetra-right" class="ghost">直角頂四面體</button>
-            <button type="button" id="fp-tetra-isos" class="ghost">等腰四面體</button>
           </div>
           <div class="fp-group-label">應用</div>
           <div class="btn-row">
@@ -492,7 +495,6 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
                 <optgroup label="四面體">
                   <option value="tetraABCD">四面體（邊不相等）D–ABC</option>
                   <option value="tetraRightApex">直角頂四面體 OABC</option>
-                  <option value="tetraIsos">等腰四面體（垂足 P）</option>
                 </optgroup>
                 <optgroup label="應用">
                   <option value="towerHoriz">鉛垂塔＋水平三角</option>
@@ -585,7 +587,12 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
   </aside>
 </div>
 <section id="bottom-tools" aria-label="立體三角學工具">
-  <div class="bottom-tool-head"><strong>幾何工具</strong><button type="button" class="pane-toggle" id="bottom-panel-toggle" aria-label="收合下方面板" title="收合下方面板">▼</button></div>
+  <div class="bottom-tool-head"><div class="tool-tabs" role="tablist" aria-label="下方工具選擇">
+    <button type="button" class="tool-tab" data-bottom-tool="triangle" aria-expanded="false">② 畫輔助三角形</button>
+    <button type="button" class="tool-tab" data-bottom-tool="projection" aria-expanded="false">③ 投影</button>
+    <button type="button" class="tool-tab" data-bottom-tool="edge" aria-expanded="false">④ 於邊上加點</button>
+    <button type="button" class="tool-tab" data-bottom-tool="angle" aria-expanded="false">6 標示夾角</button>
+  </div><button type="button" class="pane-toggle" id="bottom-panel-toggle" aria-label="收合下方面板" title="收合下方面板">▼</button></div>
   <div id="bottom-tool-content"></div>
 </section>
 
@@ -983,6 +990,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     var triPane=pane(bottom,'bottom-pane-triangle');
     var projPane=pane(bottom,'bottom-pane-projection');
     var edgePane=pane(bottom,'bottom-pane-edge');
+    var anglePane=pane(bottom,'bottom-pane-angle');
     var cutPane=pane(right,'right-pane-cut');
     var foldPane=pane(right,'right-pane-fold');
     var hTri=heading('② 畫輔助三角形'), hProj=heading('③ 投影'), hEdge=heading('④ 於邊上加點'),
@@ -993,7 +1001,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
     if(hEdge){ moveRange(hEdge,cutIntro||hFold,edgePane); }
     if(cutIntro&&hFold) moveRange(cutIntro,hFold,cutPane);
     if(hFold&&hAngle) moveRange(hFold,hAngle,foldPane);
-    if(hAngle&&details) moveRange(hAngle,details,edgePane);
+    if(hAngle&&details) moveRange(hAngle,details,anglePane);
     function bindTabGroup(selector, attr, map){
       var buttons=Array.prototype.slice.call(document.querySelectorAll(selector));
       buttons.forEach(function(btn){
@@ -1007,6 +1015,7 @@ details.upload-sec[open]>summary{margin-bottom:8px;color:#334155}
         });
       });
     }
+    bindTabGroup('[data-bottom-tool]','data-bottom-tool',{triangle:triPane,projection:projPane,edge:edgePane,angle:anglePane});
     bindTabGroup('[data-right-tool]','data-right-tool',{cut:cutPane,fold:foldPane});
     setupResizablePanels(sidebar);
   }
